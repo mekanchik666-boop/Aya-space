@@ -1,0 +1,2547 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>Ая • Наш Мир ✨</title>
+
+  <!-- iOS 18 PWA Meta Tags -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Наш Мир ✨" />
+  <meta name="theme-color" content="#140D18" />
+
+  <!-- Кастомная SVG иконка для рабочего стола iPhone -->
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%23FF758F'/%3E%3Cstop offset='50%25' stop-color='%23C9184A'/%3E%3Cstop offset='100%25' stop-color='%237209B7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='180' height='180' rx='42' fill='url(%23g)'/%3E%3Cpath d='M90 132c-22-16-42-33-42-53 0-14 11-25 25-25 8 0 14 4 17 9 3-5 9-9 17-9 14 0 25 11 25 25 0 20-20 37-42 53z' fill='%23FFF8FA'/%3E%3Ccircle cx='128' cy='48' r='8' fill='%23FFD6E0'/%3E%3C/svg%3E" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+            serif: ['Plus Jakarta Sans', 'Inter', 'sans-serif'],
+          },
+          colors: {
+            plumBg: '#140D18',
+            plumCard: '#1F1524',
+            plumSoft: '#2A1D31',
+            coralGlow: '#FF758F',
+            peachSoft: '#FFB3C1',
+            berryDeep: '#C9184A',
+            lavenderGlow: '#B892FF',
+            goldWarm: '#FFD166',
+            inkLight: '#FAF5F7',
+            mutedLight: '#BCA9B8',
+          },
+          boxShadow: {
+            'ios-deep': '0 18px 42px -12px rgba(0, 0, 0, 0.65)',
+            'coral-glow': '0 0 28px rgba(255, 117, 143, 0.35)',
+            'lavender-glow': '0 0 28px rgba(184, 146, 255, 0.28)',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    html, body {
+      background-color: #0B070E;
+      color: #FAF5F7;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-font-smoothing: antialiased;
+      overscroll-behavior-y: none;
+      user-select: none;
+    }
+
+    input, textarea, select {
+      user-select: text;
+    }
+
+    .safe-top {
+      padding-top: max(1rem, env(safe-area-inset-top));
+    }
+    .safe-bottom {
+      padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+    }
+
+    .ios-glass {
+      background: rgba(35, 24, 41, 0.78);
+      backdrop-filter: blur(26px);
+      -webkit-backdrop-filter: blur(26px);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+    }
+
+    .ios-glass-warm {
+      background: linear-gradient(145deg, rgba(255, 117, 143, 0.16), rgba(184, 146, 255, 0.1));
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+      border: 1px solid rgba(255, 179, 193, 0.24);
+    }
+
+    .ios-tab-bar {
+      background: rgba(18, 12, 22, 0.95);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    body.cozy-shell-mode #app-shell {
+      background: radial-gradient(circle at top, #2E1728 0%, #140D18 100%);
+    }
+
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    .ios-press {
+      transition: transform 0.15s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.15s ease, background-color 0.2s ease;
+      cursor: pointer;
+    }
+    .ios-press:active {
+      transform: scale(0.96);
+    }
+
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-view {
+      animation: fadeSlideUp 0.25s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    @keyframes jarShake {
+      0%, 100% { transform: rotate(0deg) scale(1); }
+      20% { transform: rotate(-10deg) scale(1.06); }
+      40% { transform: rotate(10deg) scale(1.06); }
+      60% { transform: rotate(-7deg) scale(1.03); }
+      80% { transform: rotate(7deg) scale(1.03); }
+    }
+    .jar-shaking {
+      animation: jarShake 0.55s ease-in-out;
+    }
+
+    @keyframes pulseWave {
+      0% { transform: scale(0.85); opacity: 0.85; }
+      100% { transform: scale(2.25); opacity: 0; }
+    }
+    .warmth-wave {
+      animation: pulseWave 1.3s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+    }
+
+    @keyframes floatHeartUp {
+      0% { opacity: 1; transform: translate(-50%, 0) scale(0.75); }
+      100% { opacity: 0; transform: translate(calc(-50% + var(--dx, 0px)), -150px) scale(1.45); }
+    }
+    .floating-hug-heart {
+      position: fixed;
+      pointer-events: none;
+      z-index: 80;
+      animation: floatHeartUp 1.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex justify-center items-start sm:py-5">
+
+  <!-- Оболочка iPhone iOS 18 -->
+  <div id="app-shell" class="w-full max-w-[430px] min-h-screen sm:min-h-[852px] sm:max-h-[880px] sm:rounded-[48px] sm:shadow-2xl sm:border-[6px] sm:border-white/10 bg-plumBg relative flex flex-col overflow-hidden transition-all duration-500">
+
+    <!-- Декоративное фоновое свечение -->
+    <div class="pointer-events-none absolute -top-24 -left-20 w-72 h-72 rounded-full bg-coralGlow/20 blur-3xl"></div>
+    <div class="pointer-events-none absolute top-64 -right-24 w-72 h-72 rounded-full bg-lavenderGlow/15 blur-3xl"></div>
+
+    <!-- ==================== ЭКРАН ВХОДА И ВЫБОРА ПРОФИЛЯ (AUTH SCREEN) ==================== -->
+    <section id="auth-screen" class="fixed sm:absolute inset-0 z-50 bg-plumBg flex flex-col justify-between p-6 safe-top safe-bottom overflow-y-auto no-scrollbar">
+      <div class="pt-4 text-center space-y-2">
+        <div class="w-16 h-16 mx-auto rounded-3xl bg-gradient-to-br from-coralGlow via-berryDeep to-purple-800 flex items-center justify-center text-3xl shadow-coral-glow border border-white/20">
+          ✨
+        </div>
+        <h1 class="font-serif text-3xl font-bold text-inkLight tracking-tight pt-2">Ая • Наш Мир</h1>
+        <p class="text-xs text-mutedLight max-w-[270px] mx-auto leading-relaxed">
+          Наше личное пространство на расстоянии: тепло, забота, движ и секреты для двоих
+        </p>
+      </div>
+
+      <!-- Карточки выбора профиля -->
+      <div id="auth-cards-container" class="space-y-4 my-auto py-4">
+        <button type="button" onclick="loginAsAya()" class="ios-press w-full text-left ios-glass-warm rounded-[30px] p-5 shadow-ios-deep relative overflow-hidden">
+          <div class="flex items-center gap-4">
+            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-coralGlow to-berryDeep text-white flex items-center justify-center text-2xl shadow-coral-glow shrink-0">
+              🌸
+            </div>
+            <div class="flex-1">
+              <div class="flex items-center justify-between">
+                <h2 class="font-serif text-xl font-bold text-inkLight">Для Аи 🌸</h2>
+                <span class="text-xs font-bold text-peachSoft bg-coralGlow/20 px-2.5 py-1 rounded-full">Войти →</span>
+              </div>
+              <p class="text-xs text-mutedLight mt-1 leading-relaxed">
+                Твой уютный мир: цикл, хочушки, банка тепла, скилы заботы и наш чат
+              </p>
+            </div>
+          </div>
+        </button>
+
+        <button type="button" onclick="openAdminPinPad()" class="ios-press w-full text-left ios-glass rounded-[30px] p-5 shadow-ios-deep relative overflow-hidden">
+          <div class="flex items-center gap-4">
+            <div class="w-14 h-14 rounded-2xl bg-plumSoft text-lavenderGlow flex items-center justify-center text-2xl border border-lavenderGlow/30 shrink-0">
+              🔐
+            </div>
+            <div class="flex-1">
+              <div class="flex items-center justify-between">
+                <h2 class="font-serif text-lg font-bold text-inkLight">Кабинет Парня</h2>
+                <span class="text-[11px] font-bold text-lavenderGlow bg-lavenderGlow/15 px-2.5 py-1 rounded-full border border-lavenderGlow/25">Админ • PIN</span>
+              </div>
+              <p class="text-xs text-mutedLight mt-1 leading-relaxed">
+                Пульт заботы: послания дня, радар настроения, исполнение хочушек и сюрпризы
+              </p>
+            </div>
+          </div>
+        </button>
+      </div>
+
+      <!-- Ввод 4-значного PIN-кода для Админа -->
+      <div id="admin-pin-panel" class="hidden ios-glass rounded-[32px] p-5 shadow-ios-deep space-y-4 my-auto animate-view">
+        <div class="flex items-center justify-between">
+          <button type="button" onclick="closeAdminPinPad()" class="ios-press text-xs font-semibold text-mutedLight hover:text-white flex items-center gap-1 px-2 py-1">
+            ‹ Назад
+          </button>
+          <span class="text-[11px] font-semibold text-lavenderGlow bg-lavenderGlow/15 px-2.5 py-0.5 rounded-full">
+            PIN по умолчанию: 2026
+          </span>
+        </div>
+
+        <div class="text-center">
+          <h3 class="font-serif text-xl font-bold text-inkLight">Вход в Пульт Парня</h3>
+          <p class="text-xs text-mutedLight mt-0.5">Введи 4-значный PIN-код доступа</p>
+        </div>
+
+        <div class="flex justify-center gap-3.5 py-2" id="pin-dots">
+          <span class="w-3.5 h-3.5 rounded-full border border-lavenderGlow/50 bg-transparent transition-all"></span>
+          <span class="w-3.5 h-3.5 rounded-full border border-lavenderGlow/50 bg-transparent transition-all"></span>
+          <span class="w-3.5 h-3.5 rounded-full border border-lavenderGlow/50 bg-transparent transition-all"></span>
+          <span class="w-3.5 h-3.5 rounded-full border border-lavenderGlow/50 bg-transparent transition-all"></span>
+        </div>
+
+        <div class="grid grid-cols-3 gap-2.5 max-w-[260px] mx-auto">
+          <button type="button" onclick="pressPinDigit('1')" class="ios-press h-12 rounded-2xl bg-plumSoft text-lg font-bold text-inkLight">1</button>
+          <button type="button" onclick="pressPinDigit('2')" class="ios-press h-12 rounded-2xl bg-plumSoft text-lg font-bold text-inkLight">2</button>
+          <button type="button" onclick="pressPinDigit('3')" class="ios-press h-12 rounded-2xl bg-plumSoft text-lg font-bold text-inkLight">3</button>
+          <button type="button" onclick="pressPinDigit('4')" class="ios-press h-12 rounded-2xl bg-plumSoft text-lg font-bold text-inkLight">4</button>
+          <button type="button" onclick="pressPinDigit('5')" class="ios-press h-12 rounded-2xl bg-plumSoft text-lg font-bold text-inkLight">5</button>
+          <button type="button" onclick="pressPinDigit('6')" class="ios-press h-12 rounded-2xl bg-plumSoft text-lg font-bold text-inkLight">6</button>
+          <button type="button" onclick="pressPinDigit('7')" class="ios-press h-12 rounded-2xl bg-plumSoft text-lg font-bold text-inkLight">7</button>
+          <button type="button" onclick="pressPinDigit('8')" class="ios-press h-12 rounded-2xl bg-plumSoft text-lg font-bold text-inkLight">8</button>
+          <button type="button" onclick="pressPinDigit('9')" class="ios-press h-12 rounded-2xl bg-plumSoft text-lg font-bold text-inkLight">9</button>
+          <div class="h-12"></div>
+          <button type="button" onclick="pressPinDigit('0')" class="ios-press h-12 rounded-2xl bg-plumSoft text-lg font-bold text-inkLight">0</button>
+          <button type="button" onclick="backspacePinDigit()" class="ios-press h-12 rounded-2xl bg-plumSoft/60 text-sm font-bold text-mutedLight">⌫</button>
+        </div>
+      </div>
+
+      <div class="text-center pb-2">
+        <p class="text-[11px] text-mutedLight/75">Синхронизация в реальном времени • Для Аи ❤️</p>
+      </div>
+    </section>
+
+    <!-- ==================== ВЕРХНЯЯ ПАНЕЛЬ (HEADER) ==================== -->
+    <header class="safe-top px-5 pb-3 pt-4 flex items-center justify-between relative z-20 shrink-0">
+      <div>
+        <div class="flex items-center gap-2">
+          <span id="sync-dot" class="w-2 h-2 rounded-full bg-amber-400"></span>
+          <p id="header-date" class="text-[11px] font-medium uppercase tracking-wider text-mutedLight">25 ноября • Среда</p>
+        </div>
+        <h1 id="header-greeting" class="font-serif text-2xl font-bold text-inkLight tracking-tight flex items-center gap-1.5 mt-0.5">
+          Привет, Ая <span class="text-coralGlow text-lg">✨</span>
+        </h1>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <div class="ios-glass px-3 py-1.5 rounded-2xl flex flex-col items-end border border-coralGlow/30">
+          <div class="flex items-center gap-1.5">
+            <span class="text-sm">💖</span>
+            <span id="hearts-balance-display" class="text-xs font-extrabold text-peachSoft">85</span>
+          </div>
+          <span id="header-daily-cap-text" class="text-[9px] font-semibold text-mutedLight leading-none mt-0.5">Сегодня: 0/60</span>
+        </div>
+
+        <button type="button" onclick="openProfileMenuModal()" class="ios-press ios-glass w-9 h-9 rounded-2xl flex items-center justify-center text-sm border border-white/10" title="Профиль и выход">
+          <span id="header-role-avatar">🌸</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Прогресс-бар дневного лимита 60 💖 -->
+    <div class="mx-5 mb-2.5 px-3.5 py-2 rounded-2xl ios-glass border border-white/5 flex items-center justify-between gap-3 relative z-20 shrink-0">
+      <div class="flex-1">
+        <div class="flex items-center justify-between text-[10px] font-bold mb-1">
+          <span class="text-mutedLight">Дневной лимит тепла</span>
+          <span id="daily-cap-label" class="text-peachSoft">Собрано сегодня: 0 / 60 💖</span>
+        </div>
+        <div class="w-full h-1.5 rounded-full bg-plumSoft overflow-hidden">
+          <div id="daily-cap-progress" class="h-full rounded-full bg-gradient-to-r from-coralGlow via-peachSoft to-lavenderGlow transition-all duration-300" style="width: 0%"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Баннер режима Админа -->
+    <div id="admin-top-bar" class="hidden mx-5 mb-2.5 px-4 py-2 rounded-2xl bg-gradient-to-r from-lavenderGlow/25 to-coralGlow/20 border border-lavenderGlow/35 flex items-center justify-between text-xs relative z-20 shrink-0">
+      <div class="flex items-center gap-2">
+        <span>🔐</span>
+        <span class="font-semibold text-inkLight">Режим Парня (Админ)</span>
+      </div>
+      <button type="button" onclick="switchTab('admin')" class="text-lavenderGlow font-bold underline">Открыть Пульт →</button>
+    </div>
+
+    <!-- ==================== ОСНОВНОЙ КОНТЕНТ ВКЛАДОК ==================== -->
+    <main id="main-content" class="flex-1 overflow-y-auto px-5 pb-20 space-y-4 relative z-10 no-scrollbar">
+
+      <!-- ==================== ВКЛАДКА 1: ГЛАВНАЯ ==================== -->
+      <section id="tab-home" class="space-y-4 animate-view">
+        <!-- Послание дня от парня -->
+        <div class="ios-glass-warm rounded-3xl p-4 shadow-ios-deep relative overflow-hidden">
+          <div class="flex items-start gap-3">
+            <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-coralGlow to-berryDeep text-white flex items-center justify-center shrink-0 shadow-coral-glow text-xl">
+              💌
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center justify-between gap-2">
+                <span class="text-[11px] font-bold uppercase tracking-wider text-peachSoft">Послание дня для Аи</span>
+                <button type="button" id="home-admin-edit-btn" onclick="switchTab('admin')" class="hidden text-[11px] font-bold text-lavenderGlow hover:underline">
+                  ✍️ Изменить
+                </button>
+              </div>
+              <p id="daily-love-note" class="text-sm text-inkLight leading-relaxed mt-1 font-medium">
+                Ая, даже через километры я чувствую тебя рядом. Береги себя сегодня, до нового цикла 4 дня — я всегда на связи ❤️
+              </p>
+              <p id="love-note-meta" class="text-[10px] text-mutedLight mt-1.5">С любовью, твой парень • Синхронизировано</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Компактный виджет цикла и режима дня -->
+        <div class="ios-glass rounded-[30px] p-5 shadow-ios-deep space-y-4">
+          <div class="flex items-center justify-between gap-2">
+            <div>
+              <span id="home-phase-badge" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold bg-amber-400/15 text-amber-200 border border-amber-300/25">
+                <span id="home-phase-emoji">🌙</span>
+                <span id="home-phase-name">Бережный режим • ПМС</span>
+              </span>
+              <h2 id="home-cycle-headline" class="font-serif text-2xl font-bold text-inkLight mt-2">
+                До месячных: 4 дня
+              </h2>
+              <p id="home-cycle-sub" class="text-xs text-mutedLight mt-0.5">
+                День 25 из 28 • Прогноз старта ~29 ноября
+              </p>
+            </div>
+
+            <div class="relative w-20 h-20 flex items-center justify-center shrink-0">
+              <svg class="w-full h-full -rotate-90 transform" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="40" stroke="rgba(255,255,255,0.08)" stroke-width="9" fill="none" />
+                <circle id="home-mini-ring" cx="50" cy="50" r="40" stroke="url(#miniGrad)" stroke-width="9" stroke-linecap="round" fill="none" stroke-dasharray="251.2" stroke-dashoffset="27" />
+                <defs>
+                  <linearGradient id="miniGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#FF758F" />
+                    <stop offset="100%" stop-color="#B892FF" />
+                  </linearGradient>
+                </defs>
+              </svg>
+              <span id="home-ring-day" class="absolute text-xs font-extrabold text-peachSoft">25 дн</span>
+            </div>
+          </div>
+
+          <!-- Тумблер «Я в домике» -->
+          <div class="bg-plumSoft/75 rounded-2xl p-3 flex items-center justify-between border border-white/5">
+            <div class="flex items-center gap-2.5">
+              <span class="text-lg">🧸</span>
+              <div>
+                <p class="text-xs font-bold text-inkLight">Режим «Я в домике»</p>
+                <p id="cozy-mode-desc" class="text-[11px] text-mutedLight">Сигнал парню о самом мягком режиме</p>
+              </div>
+            </div>
+            <button type="button" id="cozy-toggle-btn" onclick="toggleCozyMode()" class="ios-press w-12 h-7 rounded-full bg-plumCard p-1 transition-colors duration-300 flex items-center border border-white/10">
+              <span id="cozy-toggle-knob" class="w-5 h-5 rounded-full bg-white shadow transform transition-transform duration-300"></span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Вопрос дня для двоих -->
+        <div class="ios-glass rounded-[30px] p-5 shadow-ios-deep space-y-3.5">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-bold uppercase tracking-wider text-lavenderGlow flex items-center gap-1.5">
+              <span>💫</span> Вопрос дня на двоих
+            </span>
+            <span id="dq-reward-badge" class="text-[10px] font-bold text-goldWarm bg-goldWarm/15 px-2.5 py-0.5 rounded-full">
+              +15 💖 за ответ
+            </span>
+          </div>
+
+          <h3 id="daily-question-text" class="font-serif text-lg font-bold text-inkLight leading-snug">
+            Какой наш будущий совместный день ты ждёшь больше всего и как он пройдёт?
+          </h3>
+
+          <div class="flex gap-2">
+            <input id="dq-answer-input" type="text" placeholder="Напиши свой ответ..."
+              class="flex-1 px-3.5 py-2.5 rounded-2xl bg-plumSoft border border-white/10 text-xs text-inkLight placeholder-mutedLight focus:outline-none focus:border-lavenderGlow" />
+            <button type="button" onclick="submitDailyQuestionAnswer()" class="ios-press px-4 py-2.5 rounded-2xl bg-gradient-to-r from-lavenderGlow to-purple-600 text-plumBg font-bold text-xs shrink-0">
+              Ответить
+            </button>
+          </div>
+
+          <div id="dq-answers-grid" class="space-y-2"></div>
+        </div>
+
+        <!-- Чек-ин настроения и кнопка «Импульс тепла» -->
+        <div class="ios-glass rounded-[30px] p-5 shadow-ios-deep space-y-4">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <p id="checkin-reward-label" class="text-[11px] font-bold uppercase tracking-wider text-mutedLight">Как ты сейчас, Ая? (+10 💖 / день)</p>
+              <span id="checkin-saved-badge" class="text-[10px] font-bold text-emerald-400 opacity-0 transition-opacity">Сохранено ✓</span>
+            </div>
+            <div id="mood-chips" class="flex flex-wrap gap-1.5"></div>
+          </div>
+
+          <div class="pt-3 border-t border-white/10 flex items-center justify-between gap-3">
+            <div class="min-w-0">
+              <p class="text-xs font-bold text-inkLight">Импульс тепла через километры</p>
+              <p id="warmth-status-text" class="text-[11px] text-mutedLight truncate mt-0.5">Нажми или удерживай, чтобы обнять 🫂</p>
+            </div>
+            <button type="button" id="btn-warmth-hold"
+              onclick="sendWarmthPulse()"
+              onmousedown="startWarmthHold()" onmouseup="endWarmthHold()" onmouseleave="endWarmthHold()"
+              ontouchstart="startWarmthHold()" ontouchend="endWarmthHold()"
+              class="ios-press relative w-14 h-14 rounded-full bg-gradient-to-br from-coralGlow to-berryDeep text-white flex items-center justify-center text-2xl shadow-coral-glow shrink-0 select-none">
+              <span id="warmth-wave-1" class="hidden absolute inset-0 rounded-full border-2 border-peachSoft warmth-wave"></span>
+              <span>💗</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== ВКЛАДКА 2: ДВИЖ И СКИЛЫ ==================== -->
+      <section id="tab-vibe" class="hidden space-y-4 animate-view">
+        <!-- Банка тепла -->
+        <div class="ios-glass rounded-[30px] p-5 shadow-ios-deep space-y-3.5">
+          <div class="flex items-center justify-between">
+            <div>
+              <span class="text-[11px] font-bold uppercase tracking-wider text-peachSoft">Секретная баночка</span>
+              <h3 class="font-serif text-lg font-bold text-inkLight">Банка тепла от парня</h3>
+            </div>
+            <span id="jar-count-badge" class="text-[11px] font-bold px-2.5 py-1 rounded-full bg-coralGlow/20 text-peachSoft">8 записок</span>
+          </div>
+
+          <div class="flex items-center justify-between gap-3 bg-plumSoft/75 rounded-2xl p-3.5 border border-white/5">
+            <div>
+              <p class="text-xs font-semibold text-inkLight">Встряхни баночку, чтобы вытянуть записку</p>
+              <p id="jar-daily-status" class="text-[11px] text-mutedLight mt-0.5">Бонус сегодня: 0/3 (+10 💖)</p>
+            </div>
+            <button type="button" id="warmth-jar-btn" onclick="shakeWarmthJar()" class="ios-press w-14 h-14 rounded-2xl bg-gradient-to-br from-coralGlow/30 to-lavenderGlow/30 border border-peachSoft/30 flex items-center justify-center text-3xl shrink-0">
+              🫙
+            </button>
+          </div>
+
+          <div id="jar-pulled-card" class="hidden ios-glass-warm rounded-2xl p-4 space-y-1.5 animate-view">
+            <div class="flex items-center justify-between">
+              <span class="text-[10px] font-bold uppercase text-peachSoft">Записка для тебя 💌</span>
+              <span id="jar-pulled-reward-tag" class="text-[10px] font-bold text-goldWarm">+10 💖</span>
+            </div>
+            <p id="jar-pulled-text" class="text-xs text-inkLight leading-relaxed font-medium"></p>
+          </div>
+        </div>
+
+        <!-- Мини-игра «Ловец тепла» -->
+        <div class="ios-glass rounded-[30px] p-5 shadow-ios-deep space-y-3">
+          <div class="flex items-center justify-between">
+            <div>
+              <span class="text-[11px] font-bold uppercase tracking-wider text-lavenderGlow">Мини-игра 15 сек</span>
+              <h3 class="font-serif text-lg font-bold text-inkLight">Ловец тепла 🧺</h3>
+            </div>
+            <div class="text-right">
+              <span id="catcher-reward-badge" class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-goldWarm/15 text-goldWarm">до +15 💖 в день</span>
+              <p class="text-[10px] text-mutedLight mt-0.5">Рекорд: <span id="catcher-best-score" class="text-inkLight font-bold">0</span></p>
+            </div>
+          </div>
+
+          <div class="relative w-full h-56 rounded-2xl bg-plumBg/90 border border-white/10 overflow-hidden">
+            <canvas id="warmth-catcher-canvas" class="w-full h-full block"></canvas>
+
+            <div id="catcher-hud" class="hidden absolute top-2.5 inset-x-3 flex justify-between text-xs font-extrabold pointer-events-none">
+              <span class="px-2.5 py-1 rounded-full bg-plumCard/90 text-peachSoft">Счёт: <span id="catcher-live-score">0</span></span>
+              <span class="px-2.5 py-1 rounded-full bg-plumCard/90 text-lavenderGlow"><span id="catcher-live-time">15</span> сек</span>
+            </div>
+
+            <div id="catcher-overlay" class="absolute inset-0 bg-plumBg/85 backdrop-blur-sm flex flex-col items-center justify-center p-4 text-center space-y-2.5">
+              <h4 id="catcher-overlay-title" class="font-serif text-base font-bold text-inkLight">Поймай сердечки и звёзды!</h4>
+              <p id="catcher-overlay-sub" class="text-[11px] text-mutedLight max-w-[240px]">Води пальцем по экрану, лови 💖 (+1) и ⭐ (+3), уворачивайся от ⛈️ (-3)</p>
+              <button type="button" onclick="startWarmthCatcherGame()" class="ios-press px-5 py-2.5 rounded-2xl bg-gradient-to-r from-coralGlow to-berryDeep text-white text-xs font-bold shadow-coral-glow">
+                Играть 15 сек ▶
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Правда или Действие: Онлайн -->
+        <div class="ios-glass rounded-[30px] p-5 shadow-ios-deep space-y-3">
+          <div>
+            <span class="text-[11px] font-bold uppercase tracking-wider text-coralGlow">Для созвона и переписки</span>
+            <h3 class="font-serif text-lg font-bold text-inkLight">Правда или Действие 🎭</h3>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2.5">
+            <button type="button" onclick="rollTruthOrDare('truth')" class="ios-press py-2.5 rounded-2xl bg-lavenderGlow/20 border border-lavenderGlow/35 text-lavenderGlow text-xs font-bold">
+              🤫 Правда
+            </button>
+            <button type="button" onclick="rollTruthOrDare('dare')" class="ios-press py-2.5 rounded-2xl bg-coralGlow/20 border border-coralGlow/35 text-peachSoft text-xs font-bold">
+              ⚡ Действие
+            </button>
+          </div>
+
+          <div class="bg-plumSoft/80 rounded-2xl p-3.5 border border-white/5 space-y-2">
+            <span id="tod-type-tag" class="text-[10px] font-bold uppercase tracking-wider text-mutedLight">Нажми кнопку выше</span>
+            <p id="tod-prompt-text" class="text-xs text-inkLight leading-relaxed">Выбери «Правда» или «Действие», чтобы получить задание для расстояния ✨</p>
+            <button type="button" id="tod-send-chat-btn" onclick="sendTodToChat()" class="hidden ios-press w-full py-2 rounded-xl bg-white/10 text-inkLight text-[11px] font-bold">
+              Отправить задание в чат 💬
+            </button>
+          </div>
+        </div>
+
+        <!-- Хочушки Аи -->
+        <div class="ios-glass rounded-[30px] p-5 shadow-ios-deep space-y-3.5">
+          <div>
+            <span class="text-[11px] font-bold uppercase tracking-wider text-peachSoft">Вишлист в реальном времени</span>
+            <h3 class="font-serif text-lg font-bold text-inkLight">Мои хочушки 🍓</h3>
+          </div>
+
+          <form onsubmit="addNewWish(event)" class="space-y-2">
+            <input id="wish-title-input" type="text" placeholder="Чего тебе хочется сейчас, Ая?..."
+              class="w-full px-3.5 py-2.5 rounded-2xl bg-plumSoft border border-white/10 text-xs text-inkLight placeholder-mutedLight focus:outline-none focus:border-coralGlow" />
+            <div class="flex gap-2">
+              <select id="wish-category-select" class="px-3 py-2 rounded-2xl bg-plumSoft border border-white/10 text-xs text-inkLight focus:outline-none">
+                <option value="Внимание 💌">Внимание 💌</option>
+                <option value="Вместе 🎬">Вместе 🎬</option>
+                <option value="Вкусняшка 🍫">Вкусняшка 🍫</option>
+                <option value="Сюрприз ✨">Сюрприз ✨</option>
+              </select>
+              <button type="submit" class="ios-press flex-1 py-2 rounded-2xl bg-gradient-to-r from-coralGlow to-berryDeep text-white text-xs font-bold">
+                Добавить ✨
+              </button>
+            </div>
+          </form>
+
+          <div id="wishlist-container" class="space-y-2"></div>
+        </div>
+
+        <!-- Список дел при встрече -->
+        <div class="ios-glass rounded-[30px] p-5 shadow-ios-deep space-y-3">
+          <div class="flex items-center justify-between">
+            <div>
+              <span class="text-[11px] font-bold uppercase tracking-wider text-goldWarm">Капсула времени</span>
+              <h3 class="font-serif text-lg font-bold text-inkLight">Когда встретимся ✈️</h3>
+            </div>
+            <span id="meetup-counter-badge" class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-goldWarm/15 text-goldWarm">0/3</span>
+          </div>
+
+          <form onsubmit="addMeetupItem(event)" class="flex gap-2">
+            <input id="meetup-input" type="text" placeholder="Что сделаем вживую?..."
+              class="flex-1 px-3.5 py-2 rounded-2xl bg-plumSoft border border-white/10 text-xs text-inkLight placeholder-mutedLight focus:outline-none" />
+            <button type="submit" class="ios-press px-4 py-2 rounded-2xl bg-goldWarm text-plumBg text-xs font-bold">+</button>
+          </form>
+
+          <div id="meetup-list-container" class="space-y-2"></div>
+        </div>
+
+        <!-- Магазин Скилов заботы -->
+        <div class="space-y-3 pt-1">
+          <div class="flex items-center justify-between px-1">
+            <div>
+              <span class="text-[11px] font-bold uppercase tracking-wider text-coralGlow">Трать сердечки с умом</span>
+              <h3 class="font-serif text-xl font-bold text-inkLight">Скилы заботы ⚡</h3>
+            </div>
+            <span class="text-xs font-extrabold text-peachSoft bg-plumCard px-3 py-1.5 rounded-2xl border border-coralGlow/30">
+              Баланс: <span id="skills-hearts-balance">85</span> 💖
+            </span>
+          </div>
+          <div id="care-skills-list" class="space-y-3"></div>
+        </div>
+      </section>
+
+      <!-- ==================== ВКЛАДКА 3: ЦИКЛ И КАЛЕНДАРЬ ==================== -->
+      <section id="tab-cycle" class="hidden space-y-4 animate-view">
+        <div class="ios-glass rounded-[30px] p-5 shadow-ios-deep space-y-4">
+          <div class="flex items-center justify-between">
+            <button type="button" onclick="changeMonth(-1)" class="ios-press w-9 h-9 rounded-2xl bg-plumSoft text-inkLight flex items-center justify-center font-bold">‹</button>
+            <h3 id="calendar-month-title" class="font-serif text-lg font-bold text-inkLight capitalize">ноябрь 2026 г.</h3>
+            <button type="button" onclick="changeMonth(1)" class="ios-press w-9 h-9 rounded-2xl bg-plumSoft text-inkLight flex items-center justify-center font-bold">›</button>
+          </div>
+
+          <div class="grid grid-cols-7 gap-1.5 text-center text-[10px] font-bold text-mutedLight uppercase">
+            <span>Пн</span><span>Вт</span><span>Ср</span><span>Чт</span><span>Пт</span><span>Сб</span><span>Вс</span>
+          </div>
+
+          <div id="calendar-grid" class="grid grid-cols-7 gap-1.5"></div>
+
+          <div class="flex flex-wrap gap-3 text-[11px] text-mutedLight pt-1">
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-coralGlow"></span> Месячные</span>
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full border border-dashed border-coralGlow"></span> Прогноз</span>
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-lavenderGlow"></span> Овуляция</span>
+          </div>
+
+          <button type="button" onclick="toggleTodayPeriod()" class="ios-press w-full py-3 rounded-2xl bg-gradient-to-r from-coralGlow to-berryDeep text-white text-xs font-bold shadow-coral-glow">
+            🩸 <span id="btn-toggle-period-text">Отметить начало месячных сегодня</span>
+          </button>
+        </div>
+
+        <div class="ios-glass rounded-[30px] p-5 shadow-ios-deep space-y-3">
+          <p class="text-[11px] font-bold uppercase tracking-wider text-mutedLight">Самочувствие и симптомы сегодня</p>
+          <div id="symptom-chips" class="flex flex-wrap gap-1.5"></div>
+        </div>
+
+        <div class="ios-glass rounded-[30px] p-5 shadow-ios-deep space-y-3">
+          <p class="text-[11px] font-bold uppercase tracking-wider text-mutedLight">Параметры цикла</p>
+          <div class="flex items-center justify-between bg-plumSoft/75 p-3 rounded-2xl">
+            <span class="text-xs font-semibold text-inkLight">Длина цикла</span>
+            <div class="flex items-center gap-2.5">
+              <button type="button" onclick="adjustSetting('cycleLength', -1)" class="ios-press w-8 h-8 rounded-xl bg-plumCard font-bold text-sm">−</button>
+              <span id="setting-cycle-length" class="text-xs font-extrabold text-peachSoft w-12 text-center">28 дн.</span>
+              <button type="button" onclick="adjustSetting('cycleLength', 1)" class="ios-press w-8 h-8 rounded-xl bg-plumCard font-bold text-sm">+</button>
+            </div>
+          </div>
+          <div class="flex items-center justify-between bg-plumSoft/75 p-3 rounded-2xl">
+            <span class="text-xs font-semibold text-inkLight">Длительность месячных</span>
+            <div class="flex items-center gap-2.5">
+              <button type="button" onclick="adjustSetting('periodLength', -1)" class="ios-press w-8 h-8 rounded-xl bg-plumCard font-bold text-sm">−</button>
+              <span id="setting-period-length" class="text-xs font-extrabold text-peachSoft w-12 text-center">5 дн.</span>
+              <button type="button" onclick="adjustSetting('periodLength', 1)" class="ios-press w-8 h-8 rounded-xl bg-plumCard font-bold text-sm">+</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== ВКЛАДКА 4: ЖИВОЙ ЧАТ ==================== -->
+      <section id="tab-chat" class="hidden flex flex-col h-[calc(100vh-235px)] sm:h-[580px] animate-view">
+        <div class="ios-glass rounded-[30px] p-4 shadow-ios-deep flex-1 flex flex-col overflow-hidden">
+          <div class="flex items-center justify-between pb-3 border-b border-white/10">
+            <div>
+              <h3 class="font-serif text-base font-bold text-inkLight">Наш прямой канал 💬</h3>
+              <p class="text-[10px] text-mutedLight">Все сообщения, скилы и импульсы тепла</p>
+            </div>
+            <span id="chat-role-badge" class="text-[10px] font-bold px-2.5 py-1 rounded-full bg-coralGlow/20 text-peachSoft">Ая 🌸</span>
+          </div>
+
+          <div id="chat-messages-list" class="flex-1 overflow-y-auto py-3 space-y-2.5 no-scrollbar"></div>
+
+          <div class="flex gap-1.5 overflow-x-auto py-2 no-scrollbar">
+            <button type="button" onclick="sendQuickSticker('Скучаю по тебе 🤍')" class="ios-press shrink-0 px-2.5 py-1 rounded-full bg-plumSoft text-[11px] font-medium text-inkLight border border-white/5">Скучаю 🤍</button>
+            <button type="button" onclick="sendQuickSticker('Хочу на ручки 🧸')" class="ios-press shrink-0 px-2.5 py-1 rounded-full bg-plumSoft text-[11px] font-medium text-inkLight border border-white/5">На ручки 🧸</button>
+            <button type="button" onclick="sendQuickSticker('Болит животик 🥺')" class="ios-press shrink-0 px-2.5 py-1 rounded-full bg-plumSoft text-[11px] font-medium text-inkLight border border-white/5">Болит живот 🥺</button>
+            <button type="button" onclick="sendQuickSticker('Люблю тебя ❤️')" class="ios-press shrink-0 px-2.5 py-1 rounded-full bg-plumSoft text-[11px] font-medium text-inkLight border border-white/5">Люблю ❤️</button>
+          </div>
+
+          <form onsubmit="handleChatSubmit(event)" class="flex gap-2 pt-1">
+            <input id="chat-input" type="text" placeholder="Написать сообщение..."
+              class="flex-1 px-4 py-2.5 rounded-2xl bg-plumSoft border border-white/10 text-xs text-inkLight placeholder-mutedLight focus:outline-none focus:border-coralGlow" />
+            <button type="submit" class="ios-press px-4 py-2.5 rounded-2xl bg-gradient-to-r from-coralGlow to-berryDeep text-white text-xs font-bold shrink-0">
+              ➤
+            </button>
+          </form>
+        </div>
+      </section>
+
+      <!-- ==================== ВКЛАДКА 5: ПУЛЬТ ПАРНЯ (АДМИН + ВХОДЯЩИЕ ОТ АИ) ==================== -->
+      <section id="tab-admin" class="hidden space-y-4 animate-view">
+        <div class="ios-glass-warm rounded-[30px] p-5 shadow-ios-deep space-y-3">
+          <div class="flex items-center justify-between">
+            <div>
+              <span class="text-[11px] font-bold uppercase tracking-wider text-lavenderGlow">Кабинет Парня 🔐</span>
+              <h3 class="font-serif text-xl font-bold text-inkLight">Радар Аи</h3>
+            </div>
+            <span id="admin-cozy-badge" class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-plumSoft text-mutedLight">Обычный режим</span>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2.5">
+            <div class="bg-plumSoft/80 rounded-2xl p-3 border border-white/5">
+              <p class="text-[10px] text-mutedLight uppercase">День цикла</p>
+              <p id="admin-radar-cycle" class="text-xs font-bold text-inkLight mt-0.5">25-й день</p>
+            </div>
+            <div class="bg-plumSoft/80 rounded-2xl p-3 border border-white/5">
+              <p class="text-[10px] text-mutedLight uppercase">Копилка Аи</p>
+              <p id="admin-radar-hearts" class="text-xs font-bold text-peachSoft mt-0.5">85 💖</p>
+            </div>
+          </div>
+
+          <div class="bg-plumSoft/80 rounded-2xl p-3 border border-white/5">
+            <p class="text-[10px] text-mutedLight uppercase">Настроение и самочувствие сегодня</p>
+            <p id="admin-radar-moods" class="text-xs font-semibold text-inkLight mt-0.5">Пока не отмечено</p>
+          </div>
+        </div>
+
+        <!-- Активированные Аей скилы -->
+        <div class="ios-glass rounded-[30px] p-5 shadow-ios-deep space-y-3 border border-amber-400/35">
+          <div class="flex items-center justify-between">
+            <div>
+              <span class="text-[11px] font-bold uppercase tracking-wider text-amber-300">Срочно к выполнению</span>
+              <h3 class="font-serif text-lg font-bold text-inkLight">Активированные скилы Аи ⚡</h3>
+            </div>
+            <span id="admin-active-skills-count" class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-amber-400/20 text-amber-200">0</span>
+          </div>
+          <div id="admin-active-skills-list" class="space-y-2.5"></div>
+        </div>
+
+        <!-- Отдельное окно входящих сообщений от Аи -->
+        <div class="ios-glass rounded-[30px] p-5 shadow-ios-deep space-y-3 border border-coralGlow/30">
+          <div class="flex items-center justify-between">
+            <div>
+              <span class="text-[11px] font-bold uppercase tracking-wider text-coralGlow">Отдельное окно входящих</span>
+              <h3 class="font-serif text-lg font-bold text-inkLight">Сообщения и сигналы от Аи 💌</h3>
+            </div>
+            <span id="admin-inbox-count" class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-coralGlow/20 text-peachSoft">0</span>
+          </div>
+
+          <div id="admin-aya-inbox-list" class="max-h-60 overflow-y-auto space-y-2 pr-0.5 no-scrollbar"></div>
+
+          <form onsubmit="adminQuickReplyFromInbox(event)" class="flex gap-2 pt-1">
+            <input id="admin-inbox-reply-input" type="text" placeholder="Быстро ответить Ае..."
+              class="flex-1 px-3.5 py-2.5 rounded-2xl bg-plumSoft border border-white/10 text-xs text-inkLight placeholder-mutedLight focus:outline-none focus:border-lavenderGlow" />
+            <button type="submit" class="ios-press px-4 py-2.5 rounded-2xl bg-gradient-to-r from-lavenderGlow to-purple-600 text-plumBg text-xs font-bold shrink-0">
+              Ответить
+            </button>
+          </form>
+        </div>
+
+        <!-- Редактор послания дня -->
+        <div class="ios-glass rounded-[30px] p-5 shadow-ios-deep space-y-3">
+          <h3 class="font-serif text-base font-bold text-inkLight">✍️ Изменить послание дня на главном экране</h3>
+          <textarea id="admin-love-note-input" rows="3" placeholder="Напиши тёплое послание, которое увидит Ая при входе..."
+            class="w-full px-3.5 py-2.5 rounded-2xl bg-plumSoft border border-white/10 text-xs text-inkLight placeholder-mutedLight focus:outline-none focus:border-coralGlow"></textarea>
+          <button type="button" onclick="adminSaveLoveNote()" class="ios-press w-full py-2.5 rounded-2xl bg-gradient-to-r from-coralGlow to-berryDeep text-white text-xs font-bold">
+            Сохранить послание у Аи 💌
+          </button>
+        </div>
+
+        <!-- Управление хочушками Аи -->
+        <div class="ios-glass rounded-[30px] p-5 shadow-ios-deep space-y-3">
+          <h3 class="font-serif text-base font-bold text-inkLight">🍓 Хочушки Аи (управление статусом)</h3>
+          <div id="admin-wishlist-container" class="space-y-2.5"></div>
+        </div>
+
+        <!-- Подарить сердечки -->
+        <div class="ios-glass rounded-[30px] p-5 shadow-ios-deep space-y-3">
+          <h3 class="font-serif text-base font-bold text-inkLight">💖 Подарить сердечки просто так</h3>
+          <input id="admin-bonus-note" type="text" placeholder="За что даришь сердечки? (необязательно)"
+            class="w-full px-3.5 py-2.5 rounded-2xl bg-plumSoft border border-white/10 text-xs text-inkLight placeholder-mutedLight focus:outline-none" />
+          <div class="grid grid-cols-3 gap-2">
+            <button type="button" onclick="adminSendHeartBonus(20)" class="ios-press py-2 rounded-2xl bg-coralGlow/20 border border-coralGlow/35 text-peachSoft text-xs font-bold">+20 💖</button>
+            <button type="button" onclick="adminSendHeartBonus(35)" class="ios-press py-2 rounded-2xl bg-coralGlow/25 border border-coralGlow/45 text-peachSoft text-xs font-bold">+35 💖</button>
+            <button type="button" onclick="adminSendHeartBonus(50)" class="ios-press py-2 rounded-2xl bg-gradient-to-r from-coralGlow to-berryDeep text-white text-xs font-bold">+50 💖</button>
+          </div>
+        </div>
+
+        <!-- Добавить записку в Банку тепла -->
+        <div class="ios-glass rounded-[30px] p-5 shadow-ios-deep space-y-3">
+          <h3 class="font-serif text-base font-bold text-inkLight">🫙 Добавить записку в Банку тепла</h3>
+          <div class="flex gap-2">
+            <input id="admin-jar-note-input" type="text" placeholder="Новая тёплая фраза для Аи..."
+              class="flex-1 px-3.5 py-2.5 rounded-2xl bg-plumSoft border border-white/10 text-xs text-inkLight placeholder-mutedLight focus:outline-none" />
+            <button type="button" onclick="adminAddJarNote()" class="ios-press px-4 py-2.5 rounded-2xl bg-lavenderGlow text-plumBg text-xs font-bold">Добавить</button>
+          </div>
+        </div>
+
+        <!-- Создать новый скил -->
+        <div class="ios-glass rounded-[30px] p-5 shadow-ios-deep space-y-3">
+          <h3 class="font-serif text-base font-bold text-inkLight">⚡ Добавить новый скил заботы</h3>
+          <div class="grid grid-cols-4 gap-2">
+            <input id="admin-skill-emoji" type="text" value="🎁" maxlength="4"
+              class="px-3 py-2 rounded-2xl bg-plumSoft border border-white/10 text-center text-sm text-inkLight focus:outline-none" />
+            <input id="admin-skill-title" type="text" placeholder="Название скила..."
+              class="col-span-3 px-3.5 py-2 rounded-2xl bg-plumSoft border border-white/10 text-xs text-inkLight placeholder-mutedLight focus:outline-none" />
+          </div>
+          <input id="admin-skill-desc" type="text" placeholder="Описание (что ты сделаешь для неё)..."
+            class="w-full px-3.5 py-2 rounded-2xl bg-plumSoft border border-white/10 text-xs text-inkLight placeholder-mutedLight focus:outline-none" />
+          <div class="flex gap-2">
+            <input id="admin-skill-cost" type="number" value="40" min="5" max="500"
+              class="w-24 px-3.5 py-2 rounded-2xl bg-plumSoft border border-white/10 text-xs text-inkLight focus:outline-none" />
+            <button type="button" onclick="adminCreateSkill()" class="ios-press flex-1 py-2 rounded-2xl bg-gradient-to-r from-coralGlow to-berryDeep text-white text-xs font-bold">
+              Создать скил ✨
+            </button>
+          </div>
+        </div>
+
+        <!-- Смена PIN-кода -->
+        <div class="ios-glass rounded-[30px] p-5 shadow-ios-deep space-y-3">
+          <h3 class="font-serif text-base font-bold text-inkLight">🔐 Сменить PIN-код входа в Пульт</h3>
+          <div class="flex gap-2">
+            <input id="admin-new-pin-input" type="password" inputmode="numeric" maxlength="4" placeholder="4 цифры"
+              class="flex-1 px-3.5 py-2 rounded-2xl bg-plumSoft border border-white/10 text-xs text-inkLight placeholder-mutedLight focus:outline-none" />
+            <button type="button" onclick="adminUpdatePin()" class="ios-press px-4 py-2 rounded-2xl bg-plumSoft border border-white/15 text-xs font-bold text-inkLight">Обновить</button>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ==================== НИЖНЯЯ ПАНЕЛЬ НАВИГАЦИИ iOS 18 ==================== -->
+    <nav id="bottom-nav-bar" class="ios-tab-bar safe-bottom sticky bottom-0 w-full px-2 pt-2 pb-2 grid grid-cols-4 gap-1 relative z-30 shrink-0">
+      <button type="button" onclick="switchTab('home')" id="nav-home" class="ios-press flex flex-col items-center justify-center gap-0.5 text-coralGlow font-semibold py-1">
+        <div class="w-10 h-6 rounded-full bg-coralGlow/20 flex items-center justify-center transition-colors" id="nav-pill-home">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+          </svg>
+        </div>
+        <span class="text-[10px] leading-tight">Главная</span>
+      </button>
+
+      <button type="button" onclick="switchTab('vibe')" id="nav-vibe" class="ios-press flex flex-col items-center justify-center gap-0.5 text-mutedLight font-medium py-1">
+        <div class="w-10 h-6 rounded-full flex items-center justify-center transition-colors" id="nav-pill-vibe">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3l2.4 5.6L20 9.4l-4.2 4 1 5.6L12 16.3 7.2 19l1-5.6-4.2-4 5.6-.8L12 3z" />
+          </svg>
+        </div>
+        <span class="text-[10px] leading-tight">Движ</span>
+      </button>
+
+      <button type="button" onclick="switchTab('cycle')" id="nav-cycle" class="ios-press flex flex-col items-center justify-center gap-0.5 text-mutedLight font-medium py-1">
+        <div class="w-10 h-6 rounded-full flex items-center justify-center transition-colors" id="nav-pill-cycle">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
+          </svg>
+        </div>
+        <span class="text-[10px] leading-tight">Цикл</span>
+      </button>
+
+      <button type="button" onclick="switchTab('chat')" id="nav-chat" class="ios-press flex flex-col items-center justify-center gap-0.5 text-mutedLight font-medium relative py-1">
+        <div class="w-10 h-6 rounded-full flex items-center justify-center transition-colors relative" id="nav-pill-chat">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+          </svg>
+          <span id="chat-unread-dot" class="hidden absolute top-0.5 right-1.5 w-2 h-2 rounded-full bg-coralGlow"></span>
+        </div>
+        <span class="text-[10px] leading-tight">Чат</span>
+      </button>
+
+      <button type="button" onclick="switchTab('admin')" id="nav-admin" class="hidden ios-press flex flex-col items-center justify-center gap-0.5 text-mutedLight font-medium relative py-1">
+        <div class="w-10 h-6 rounded-full flex items-center justify-center transition-colors relative" id="nav-pill-admin">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+          </svg>
+          <span id="admin-unread-dot" class="hidden absolute top-0.5 right-1.5 w-2 h-2 rounded-full bg-amber-400"></span>
+        </div>
+        <span class="text-[10px] leading-tight">Пульт</span>
+      </button>
+    </nav>
+
+    <!-- ==================== МОДАЛЬНОЕ ОКНО: МЕНЮ ПРОФИЛЯ И ВЫХОДА ==================== -->
+    <div id="profile-menu-modal" class="hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-end sm:items-center justify-center p-4">
+      <div class="bg-plumCard w-full max-w-[390px] rounded-[32px] p-6 shadow-2xl border border-white/10 space-y-4 animate-view">
+        <div class="flex items-center justify-between">
+          <h3 class="font-serif text-lg font-bold text-inkLight">Аккаунт и доступ</h3>
+          <button type="button" onclick="closeModal('profile-menu-modal')" class="ios-press w-8 h-8 rounded-full bg-plumSoft text-mutedLight flex items-center justify-center text-sm">✕</button>
+        </div>
+
+        <div class="bg-plumSoft/80 rounded-2xl p-4 border border-white/5">
+          <p class="text-[11px] text-mutedLight uppercase">Текущий профиль</p>
+          <p id="modal-current-profile-name" class="text-sm font-bold text-inkLight mt-0.5">Ая 🌸</p>
+        </div>
+
+        <button type="button" onclick="logoutProfile()" class="ios-press w-full py-3 rounded-2xl bg-coralGlow/20 border border-coralGlow/35 text-peachSoft font-bold text-xs">
+          Сменить профиль / Выйти на экран входа
+        </button>
+      </div>
+    </div>
+
+    <!-- iOS Toast уведомление -->
+    <div id="ios-toast" class="pointer-events-none fixed top-14 left-1/2 -translate-x-1/2 z-[90] opacity-0 -translate-y-3 transition-all duration-300">
+      <div class="ios-glass px-4 py-2.5 rounded-full shadow-ios-deep border border-white/15 flex items-center gap-2 whitespace-nowrap">
+        <span id="toast-icon" class="text-sm">✨</span>
+        <span id="toast-message" class="text-xs font-semibold text-inkLight">Готово</span>
+      </div>
+    </div>
+
+    <!-- Canvas для конфетти -->
+    <canvas id="confetti-canvas" class="pointer-events-none fixed inset-0 z-[85]"></canvas>
+  </div>
+
+  <!-- Firebase Compat SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+  <!-- Основная логика приложения -->
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCQC24R5NHS-jYRQjlEAlOnBDQdxdRanMQ",
+      authDomain: "mekan-502da.firebaseapp.com",
+      projectId: "mekan-502da",
+      storageBucket: "mekan-502da.firebasestorage.app",
+      messagingSenderId: "558614487903",
+      appId: "1:558614487903:web:8370d03e08138193d78cea"
+    };
+
+    const SESSION_ROLE_KEY = 'aya_world_session_role_v6';
+    const BACKUP_KEY = 'aya_world_backup_v6';
+    const DAILY_HEARTS_CAP = 60;
+
+    // 1 ноября старт цикла -> 25 ноября = День 25 из 28 (до месячных 4 дня, старт ~29 ноября)
+    const DEFAULT_PERIOD_DAYS = ['2026-11-01', '2026-11-02', '2026-11-03', '2026-11-04', '2026-11-05'];
+
+    const MOOD_OPTIONS = [
+      { id: 'tender', label: 'Нежное', emoji: '🥰' },
+      { id: 'miss', label: 'Скучаю', emoji: '🤍' },
+      { id: 'cozy', label: 'В домике', emoji: '🧸' },
+      { id: 'energetic', label: 'На движе', emoji: '⚡' },
+      { id: 'pms', label: 'Грустно / ПМС', emoji: '🥺' },
+      { id: 'sleepy', label: 'Сонное', emoji: '😴' }
+    ];
+
+    const SYMPTOM_OPTIONS = [
+      { id: 'cramps', label: 'Тянет живот', emoji: '🫧' },
+      { id: 'sweet', label: 'Хочу сладкого', emoji: '🍫' },
+      { id: 'headache', label: 'Головная боль', emoji: '🤕' },
+      { id: 'backache', label: 'Ноет поясница', emoji: '🌙' },
+      { id: 'warmth', label: 'Хочется тепла', emoji: '☕' }
+    ];
+
+    const DEFAULT_JAR_NOTES = [
+      'Ая, даже когда нас разделяют километры, ты — моя самая тёплая мысль перед сном и первая улыбка утром ❤️',
+      'Обожаю твой смех — ради него я готов рассказывать тебе самые смешные истории хоть до рассвета 🌸',
+      'Ты невероятно нежная и сильная одновременно. Горжусь тобой каждый день, моя Аечка ✨',
+      'Помни: тебе не нужно быть всегда идеальной. В любой день я на твоей стороне и крепко тебя обнимаю 🫂',
+      'Скоро расстояние закончится, и мы наверстаем каждое пропущенное объятие в стократном размере 💫',
+      'Ты делаешь мой мир ярче просто тем, что пишешь мне «Доброе утро» ☀️',
+      'Если сегодня хочется просто лежать под пледом и слушать мой голос — это официально лучший план на вечер 🎧',
+      'Моя любимая девочка, пусть каждый твой день будет наполнен ощущением, как сильно тебя любят 💖'
+    ];
+
+    const TRUTH_PROMPTS = [
+      'Какое наше первое воспоминание или переписка до сих пор вызывает у тебя улыбку?',
+      'Какая маленькая привычка партнёра кажется тебе самой милой?',
+      'О чём ты мечтаешь перед сном, когда думаешь о нашей следующей встрече?',
+      'Какой фильм или сериал мы обязаны посмотреть вместе в ближайший вечер?',
+      'Если бы мы прямо сейчас оказались в одном городе, куда бы пошли в первую очередь?',
+      'Что в наших отношениях на расстоянии помогает тебе сильнее всего не грустить?'
+    ];
+
+    const DARE_PROMPTS = [
+      'Запиши голосовое на 10 секунд с самым тёплым комплиментом для второй половинки 🎙️',
+      'Сделай смешное или милое селфи прямо сейчас и отправь в Telegram/чат 📸',
+      'Выбери 1 песню, которая прямо сейчас описывает твоё настроение, и скинь название 🎵',
+      'Опиши наш идеальный совместный выходной в 3 предложениях ✍️',
+      'Придумай новое милое прозвище для партнёра на сегодняшний вечер 🧸',
+      'Напиши 3 вещи, за которые ты благодарен(на) партнёру на этой неделе ❤️'
+    ];
+
+    const DEFAULT_SKILLS = [
+      {
+        id: 'just_listen',
+        emoji: '🧸',
+        title: 'Анти-стресс сеанс (Без советов)',
+        desc: '20 минут выслушиваю всё, что накипело, без нотаций, советов и споров — только тепло.',
+        cost: 15
+      },
+      {
+        id: 'secret_playlist',
+        emoji: '🎧',
+        title: 'Секретный плейлист под вайб',
+        desc: 'Соберу для тебя 5 треков специально под твоё сегодняшнее настроение.',
+        cost: 20
+      },
+      {
+        id: 'bedtime_story',
+        emoji: '📖',
+        title: 'Личный диктор на ночь',
+        desc: 'Почитаю тебе вслух сказку или уютную историю на созвоне перед сном.',
+        cost: 25
+      },
+      {
+        id: 'cinema_headphones',
+        emoji: '🎬',
+        title: 'Кинотеатр в наушниках',
+        desc: 'Совместный просмотр фильма, сериала или аниме онлайн — выбираешь ты или я.',
+        cost: 30
+      },
+      {
+        id: 'legendary_snack',
+        emoji: '👑',
+        title: 'Легендарный купон: Вкусняшка к двери',
+        desc: 'Редкий купон за терпение и накопление: доставка твоих любимых сладостей или еды к двери!',
+        cost: 180
+      }
+    ];
+
+    // ==================== СОСТОЯНИЕ ПРИЛОЖЕНИЯ ====================
+    let loggedInRole = null;
+    let enteredPinBuffer = '';
+    let activeTab = 'home';
+    let currentCalendarMonth = new Date(2026, 10, 1);
+    let currentTodPrompt = null;
+
+    let sharedState = {
+      adminPin: '2026',
+      hearts: 85,
+      bestCatcherScore: 0,
+      dailyEarn: {
+        date: toDateKey(getTodayDate()),
+        totalEarned: 0,
+        jarOpens: 0,
+        checkinClaimed: false,
+        dqClaimed: false,
+        gameClaimed: false
+      },
+      cycleLength: 28,
+      periodLength: 5,
+      periodDays: [...DEFAULT_PERIOD_DAYS],
+      checkins: {},
+      cozyMode: false,
+      loveNote: 'Ая, даже через километры я чувствую тебя рядом. Береги себя сегодня, до нового цикла 4 дня — я всегда на связи ❤️',
+      dailyQuestion: {
+        id: 'dq_1',
+        question: 'Какой наш будущий совместный день ты ждёшь больше всего и как он пройдёт?',
+        ayaAnswer: '',
+        adminAnswer: ''
+      },
+      jarNotes: [...DEFAULT_JAR_NOTES],
+      meetupList: [
+        { id: 'm1', text: 'Обняться на вокзале / в аэропорту и не отпускать 5 минут', done: false },
+        { id: 'm2', text: 'Взять горячий какао и гулять по ночному городу', done: false },
+        { id: 'm3', text: 'Посмотреть фильм под одним пледом без телефона', done: false }
+      ],
+      wishes: [
+        { id: 'w1', title: 'Почитать мне сказку перед сном по созвону', category: 'Внимание 💌', status: 'new', createdAt: Date.now() - 500000 },
+        { id: 'w2', title: 'Посмотреть вечером комедию в наушниках', category: 'Вместе 🎬', status: 'new', createdAt: Date.now() - 200000 }
+      ],
+      activatedSkills: [],
+      skills: JSON.parse(JSON.stringify(DEFAULT_SKILLS)),
+      lastWarmthAt: null,
+      lastWarmthBy: null
+    };
+
+    let chatMessages = [
+      {
+        id: 'init_1',
+        sender: 'admin',
+        type: 'text',
+        text: 'Добро пожаловать в «Наш Мир», Аечка ❤️ Зарабатывай до 60 💖 в день (Банка тепла, Вопрос дня, Чек-ин и игра «Ловец тепла») и копи на скилы!',
+        createdAt: Date.now() - 3600000
+      }
+    ];
+
+    let db = null;
+    let roomDoc = null;
+    let isFirebaseReady = false;
+    let isRemoteSyncing = false;
+
+    // ==================== УТИЛИТЫ ====================
+    function getTodayDate() {
+      const d = new Date();
+      d.setHours(0, 0, 0, 0);
+      return d;
+    }
+
+    function toDateKey(date) {
+      const y = date.getFullYear();
+      const m = String(date.getMonth() + 1).padStart(2, '0');
+      const d = String(date.getDate()).padStart(2, '0');
+      return `${y}-${m}-${d}`;
+    }
+
+    function parseDateKey(key) {
+      const [y, m, d] = key.split('-').map(Number);
+      return new Date(y, m - 1, d);
+    }
+
+    function pluralDays(n) {
+      const abs = Math.abs(n) % 100;
+      const n1 = abs % 10;
+      if (abs > 10 && abs < 20) return `${n} дней`;
+      if (n1 > 1 && n1 < 5) return `${n} дня`;
+      if (n1 === 1) return `${n} день`;
+      return `${n} дней`;
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    function formatTime(ts) {
+      if (!ts) return 'сейчас';
+      return new Date(ts).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+    }
+
+    function ensureTodayDailyEarn() {
+      const todayKey = toDateKey(getTodayDate());
+      if (!sharedState.dailyEarn || sharedState.dailyEarn.date !== todayKey) {
+        sharedState.dailyEarn = {
+          date: todayKey,
+          totalEarned: 0,
+          jarOpens: 0,
+          checkinClaimed: false,
+          dqClaimed: false,
+          gameClaimed: false
+        };
+      }
+      return sharedState.dailyEarn;
+    }
+
+    function awardDailyHearts(requestedAmount, sourceFlag) {
+      const earn = ensureTodayDailyEarn();
+      if (earn.totalEarned >= DAILY_HEARTS_CAP) {
+        return { awarded: 0, capReached: true };
+      }
+      const allowed = Math.min(requestedAmount, DAILY_HEARTS_CAP - earn.totalEarned);
+      earn.totalEarned += allowed;
+      if (sourceFlag) {
+        earn[sourceFlag] = true;
+      }
+      sharedState.hearts = (sharedState.hearts || 0) + allowed;
+      return { awarded: allowed, capReached: earn.totalEarned >= DAILY_HEARTS_CAP };
+    }
+
+    function saveBackup() {
+      try {
+        localStorage.setItem(BACKUP_KEY, JSON.stringify({ sharedState, chatMessages }));
+      } catch (e) {}
+    }
+
+    function loadBackup() {
+      try {
+        const savedRole = localStorage.getItem(SESSION_ROLE_KEY);
+        if (savedRole === 'aya' || savedRole === 'admin') {
+          loggedInRole = savedRole;
+        }
+        const raw = localStorage.getItem(BACKUP_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (parsed.sharedState) {
+            sharedState = { ...sharedState, ...parsed.sharedState };
+          }
+          if (Array.isArray(parsed.chatMessages) && parsed.chatMessages.length > 0) {
+            chatMessages = parsed.chatMessages;
+          }
+        }
+      } catch (e) {}
+    }
+
+    // ==================== FIREBASE REAL-TIME SYNC ====================
+    function initCloud() {
+      loadBackup();
+      applySessionUI();
+      renderAll();
+
+      try {
+        if (!window.firebase) return;
+        if (!firebase.apps.length) {
+          firebase.initializeApp(firebaseConfig);
+        }
+        db = firebase.firestore();
+        roomDoc = db.collection('couples').doc('aya_and_me_room');
+        isFirebaseReady = true;
+
+        roomDoc.onSnapshot(
+          (snap) => {
+            const syncDot = document.getElementById('sync-dot');
+            if (syncDot) {
+              syncDot.className = 'w-2 h-2 rounded-full bg-emerald-400 animate-pulse';
+            }
+
+            if (snap.exists) {
+              const data = snap.data();
+              isRemoteSyncing = true;
+              if (data.sharedState) {
+                sharedState = { ...sharedState, ...data.sharedState };
+              }
+              if (Array.isArray(data.chatMessages) && data.chatMessages.length > 0) {
+                chatMessages = data.chatMessages;
+              }
+              saveBackup();
+              renderAll();
+              isRemoteSyncing = false;
+            } else {
+              pushStateToCloud();
+            }
+          },
+          (err) => {
+            console.warn('Firestore offline/fallback:', err);
+            const syncDot = document.getElementById('sync-dot');
+            if (syncDot) syncDot.className = 'w-2 h-2 rounded-full bg-amber-400';
+          }
+        );
+      } catch (e) {
+        console.warn('Firebase init fallback:', e);
+      }
+    }
+
+    function pushStateToCloud() {
+      saveBackup();
+      if (!isFirebaseReady || !roomDoc || isRemoteSyncing) return;
+      const trimmedChat = chatMessages.slice(-80);
+      roomDoc
+        .set({ sharedState, chatMessages: trimmedChat, updatedAt: Date.now() }, { merge: true })
+        .catch((err) => console.warn('Sync write error:', err));
+    }
+
+    // ==================== АВТОРИЗАЦИЯ И PIN-КЛАВИАТУРА ====================
+    function applySessionUI() {
+      const authScreen = document.getElementById('auth-screen');
+      const navAdmin = document.getElementById('nav-admin');
+      const bottomNav = document.getElementById('bottom-nav-bar');
+      const adminTopBar = document.getElementById('admin-top-bar');
+      const homeAdminEditBtn = document.getElementById('home-admin-edit-btn');
+      const greetingEl = document.getElementById('header-greeting');
+      const avatarEl = document.getElementById('header-role-avatar');
+      const chatBadge = document.getElementById('chat-role-badge');
+      const modalProfileName = document.getElementById('modal-current-profile-name');
+
+      if (!loggedInRole) {
+        authScreen.classList.remove('hidden');
+        return;
+      }
+
+      authScreen.classList.add('hidden');
+
+      if (loggedInRole === 'admin') {
+        navAdmin.classList.remove('hidden');
+        bottomNav.classList.remove('grid-cols-4');
+        bottomNav.classList.add('grid-cols-5');
+        adminTopBar.classList.remove('hidden');
+        homeAdminEditBtn.classList.remove('hidden');
+        greetingEl.innerHTML = 'Привет, Парень <span class="text-lavenderGlow text-lg">🔐</span>';
+        avatarEl.textContent = '🔐';
+        chatBadge.textContent = 'Парень 🔐';
+        modalProfileName.textContent = 'Кабинет Парня (Админ) 🔐';
+      } else {
+        navAdmin.classList.add('hidden');
+        bottomNav.classList.remove('grid-cols-5');
+        bottomNav.classList.add('grid-cols-4');
+        adminTopBar.classList.add('hidden');
+        homeAdminEditBtn.classList.add('hidden');
+        greetingEl.innerHTML = 'Привет, Ая <span class="text-coralGlow text-lg">✨</span>';
+        avatarEl.textContent = '🌸';
+        chatBadge.textContent = 'Ая 🌸';
+        modalProfileName.textContent = 'Ая 🌸';
+        if (activeTab === 'admin') switchTab('home');
+      }
+    }
+
+    function loginAsAya() {
+      loggedInRole = 'aya';
+      localStorage.setItem(SESSION_ROLE_KEY, 'aya');
+      applySessionUI();
+      renderAll();
+      showToast('🌸', 'С возвращением, Ая!');
+    }
+
+    function openAdminPinPad() {
+      enteredPinBuffer = '';
+      updatePinDots();
+      document.getElementById('auth-cards-container').classList.add('hidden');
+      document.getElementById('admin-pin-panel').classList.remove('hidden');
+    }
+
+    function closeAdminPinPad() {
+      enteredPinBuffer = '';
+      updatePinDots();
+      document.getElementById('admin-pin-panel').classList.add('hidden');
+      document.getElementById('auth-cards-container').classList.remove('hidden');
+    }
+
+    function pressPinDigit(digit) {
+      if (enteredPinBuffer.length >= 4) return;
+      enteredPinBuffer += String(digit);
+      updatePinDots();
+
+      if (enteredPinBuffer.length === 4) {
+        const expectedPin = String(sharedState.adminPin || '2026');
+        if (enteredPinBuffer === expectedPin) {
+          loggedInRole = 'admin';
+          localStorage.setItem(SESSION_ROLE_KEY, 'admin');
+          closeAdminPinPad();
+          applySessionUI();
+          renderAll();
+          switchTab('admin');
+          showToast('🔐', 'Добро пожаловать в Пульт Парня!');
+        } else {
+          showToast('❌', 'Неверный PIN-код');
+          setTimeout(() => {
+            enteredPinBuffer = '';
+            updatePinDots();
+          }, 300);
+        }
+      }
+    }
+
+    function backspacePinDigit() {
+      enteredPinBuffer = enteredPinBuffer.slice(0, -1);
+      updatePinDots();
+    }
+
+    function updatePinDots() {
+      const dots = document.querySelectorAll('#pin-dots span');
+      dots.forEach((dot, idx) => {
+        if (idx < enteredPinBuffer.length) {
+          dot.classList.add('bg-lavenderGlow', 'scale-110');
+          dot.classList.remove('bg-transparent');
+        } else {
+          dot.classList.remove('bg-lavenderGlow', 'scale-110');
+          dot.classList.add('bg-transparent');
+        }
+      });
+    }
+
+    function openProfileMenuModal() {
+      document.getElementById('profile-menu-modal').classList.remove('hidden');
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.add('hidden');
+    }
+
+    function logoutProfile() {
+      closeModal('profile-menu-modal');
+      loggedInRole = null;
+      localStorage.removeItem(SESSION_ROLE_KEY);
+      applySessionUI();
+    }
+
+    // ==================== НАВИГАЦИЯ ПО ВКЛАДКАМ ====================
+    function switchTab(tabName) {
+      if (tabName === 'admin' && loggedInRole !== 'admin') return;
+      activeTab = tabName;
+
+      ['home', 'vibe', 'cycle', 'chat', 'admin'].forEach((t) => {
+        const sec = document.getElementById(`tab-${t}`);
+        const navBtn = document.getElementById(`nav-${t}`);
+        const pill = document.getElementById(`nav-pill-${t}`);
+        if (!sec || !navBtn || !pill) return;
+
+        if (t === tabName) {
+          sec.classList.remove('hidden');
+          navBtn.classList.remove('text-mutedLight', 'font-medium');
+          navBtn.classList.add('text-coralGlow', 'font-semibold');
+          pill.classList.add('bg-coralGlow/20');
+        } else {
+          sec.classList.add('hidden');
+          navBtn.classList.remove('text-coralGlow', 'font-semibold');
+          navBtn.classList.add('text-mutedLight', 'font-medium');
+          pill.classList.remove('bg-coralGlow/20');
+        }
+      });
+
+      if (tabName === 'chat') {
+        document.getElementById('chat-unread-dot').classList.add('hidden');
+        const list = document.getElementById('chat-messages-list');
+        if (list) list.scrollTop = list.scrollHeight;
+      }
+      if (tabName === 'admin') {
+        document.getElementById('admin-unread-dot').classList.add('hidden');
+        renderAdminPanel();
+      }
+      if (tabName === 'vibe') {
+        resizeCatcherCanvas();
+      }
+    }
+
+    // ==================== РАСЧЁТ ЦИКЛА (ДЕНЬ 25 ИЗ 28 -> 4 ДНЯ ДО МЕСЯЧНЫХ) ====================
+    function getCycleStartDates() {
+      const sorted = [...(sharedState.periodDays || DEFAULT_PERIOD_DAYS)].sort();
+      const starts = [];
+      for (let i = 0; i < sorted.length; i++) {
+        if (i === 0) {
+          starts.push(sorted[i]);
+        } else {
+          const prev = parseDateKey(sorted[i - 1]);
+          const curr = parseDateKey(sorted[i]);
+          const diffDays = Math.round((curr - prev) / 86400000);
+          if (diffDays > 2) starts.push(sorted[i]);
+        }
+      }
+      return starts;
+    }
+
+    function getCycleInfo() {
+      const today = getTodayDate();
+      const todayKey = toDateKey(today);
+      const starts = getCycleStartDates();
+      const cycleLen = sharedState.cycleLength || 28;
+      const periodLen = sharedState.periodLength || 5;
+
+      let lastStart = starts.length > 0 ? parseDateKey(starts[starts.length - 1]) : new Date(2026, 10, 1);
+      for (let i = starts.length - 1; i >= 0; i--) {
+        const candidate = parseDateKey(starts[i]);
+        if (candidate <= today) {
+          lastStart = candidate;
+          break;
+        }
+      }
+
+      const rawDiff = Math.floor((today - lastStart) / 86400000);
+      const dayOfCycle = (((rawDiff % cycleLen) + cycleLen) % cycleLen) + 1;
+      const daysUntilNext = cycleLen - dayOfCycle + 1;
+
+      const nextStart = new Date(today);
+      nextStart.setDate(today.getDate() + daysUntilNext);
+      const nextStartStr = nextStart.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' });
+
+      const isPeriodNow = (sharedState.periodDays || []).includes(todayKey) || dayOfCycle <= periodLen;
+
+      let phase = {
+        name: 'Бережный режим • ПМС',
+        emoji: '🌙',
+        headline: `До месячных: ${pluralDays(daysUntilNext)}`,
+        sub: `День ${dayOfCycle} из ${cycleLen} • Прогноз старта ~${nextStartStr}`
+      };
+
+      if (isPeriodNow) {
+        phase = {
+          name: 'Менструация • Максимум уюта',
+          emoji: '🩸',
+          headline: `День месячных: ${dayOfCycle}-й`,
+          sub: `День ${dayOfCycle} из ${cycleLen} • Бережный режим включён`
+        };
+      } else if (dayOfCycle <= 13) {
+        phase = {
+          name: 'Фолликулярная фаза • Энергия',
+          emoji: '🌸',
+          headline: `До месячных: ${pluralDays(daysUntilNext)}`,
+          sub: `День ${dayOfCycle} из ${cycleLen} • Отличное время для движа`
+        };
+      } else if (dayOfCycle <= 16) {
+        phase = {
+          name: 'Овуляция • Сияние',
+          emoji: '✨',
+          headline: `До месячных: ${pluralDays(daysUntilNext)}`,
+          sub: `День ${dayOfCycle} из ${cycleLen} • Пик тепла и романтики`
+        };
+      }
+
+      return { dayOfCycle, cycleLen, periodLen, daysUntilNext, nextStartStr, phase, lastStart };
+    }
+
+    // ==================== РЕНДЕР ВСЕХ ЭКРАНОВ ====================
+    function renderAll() {
+      const today = getTodayDate();
+      const todayKey = toDateKey(today);
+      const earn = ensureTodayDailyEarn();
+      const info = getCycleInfo();
+
+      // Шапка и баланс
+      const dateStr = today.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', weekday: 'long' });
+      document.getElementById('header-date').textContent = dateStr;
+      document.getElementById('hearts-balance-display').textContent = sharedState.hearts;
+      document.getElementById('skills-hearts-balance').textContent = sharedState.hearts;
+      document.getElementById('header-daily-cap-text').textContent = `Сегодня: ${earn.totalEarned}/${DAILY_HEARTS_CAP}`;
+      document.getElementById('daily-cap-label').textContent = `Собрано сегодня: ${earn.totalEarned} / ${DAILY_HEARTS_CAP} 💖`;
+      document.getElementById('daily-cap-progress').style.width = `${Math.min(100, (earn.totalEarned / DAILY_HEARTS_CAP) * 100)}%`;
+
+      // Послание дня
+      document.getElementById('daily-love-note').textContent = sharedState.loveNote;
+
+      // Виджет цикла на главной
+      document.getElementById('home-phase-emoji').textContent = info.phase.emoji;
+      document.getElementById('home-phase-name').textContent = info.phase.name;
+      document.getElementById('home-cycle-headline').textContent = info.phase.headline;
+      document.getElementById('home-cycle-sub').textContent = info.phase.sub;
+      document.getElementById('home-ring-day').textContent = `${info.dayOfCycle} дн`;
+
+      const circumference = 251.2;
+      const offset = circumference - (info.dayOfCycle / info.cycleLen) * circumference;
+      document.getElementById('home-mini-ring').setAttribute('stroke-dashoffset', String(Math.max(0, offset)));
+
+      // Тумблер «Я в домике»
+      const cozyBtn = document.getElementById('cozy-toggle-btn');
+      const cozyKnob = document.getElementById('cozy-toggle-knob');
+      if (sharedState.cozyMode) {
+        document.body.classList.add('cozy-shell-mode');
+        cozyBtn.classList.add('bg-coralGlow');
+        cozyBtn.classList.remove('bg-plumCard');
+        cozyKnob.classList.add('translate-x-5');
+        document.getElementById('cozy-mode-desc').textContent = 'Активен: парень знает, что тебе нужен покой 🧸';
+      } else {
+        document.body.classList.remove('cozy-shell-mode');
+        cozyBtn.classList.remove('bg-coralGlow');
+        cozyBtn.classList.add('bg-plumCard');
+        cozyKnob.classList.remove('translate-x-5');
+        document.getElementById('cozy-mode-desc').textContent = 'Сигнал парню о самом мягком режиме';
+      }
+
+      // Статус импульса тепла
+      if (sharedState.lastWarmthAt) {
+        const who = sharedState.lastWarmthBy === 'admin' ? 'Парень' : 'Ая';
+        document.getElementById('warmth-status-text').textContent = `Последнее объятие: ${who} в ${formatTime(sharedState.lastWarmthAt)} 🫂`;
+      }
+
+      renderDailyQuestion();
+      renderMoodChips(todayKey);
+      renderWarmthJarUI();
+      renderWishlist();
+      renderMeetupList();
+      renderCareSkills();
+      renderCalendar();
+      renderSymptomChips(todayKey);
+      renderChat();
+
+      document.getElementById('setting-cycle-length').textContent = `${info.cycleLen} дн.`;
+      document.getElementById('setting-period-length').textContent = `${info.periodLen} дн.`;
+
+      if (loggedInRole === 'admin') {
+        renderAdminPanel();
+      }
+    }
+
+    // ==================== ДЕЙСТВИЯ НА ГЛАВНОЙ ====================
+    function toggleCozyMode() {
+      sharedState.cozyMode = !sharedState.cozyMode;
+      const author = loggedInRole === 'admin' ? 'admin' : 'aya';
+      chatMessages.push({
+        id: 'm_' + Date.now(),
+        sender: author,
+        type: 'system',
+        text: sharedState.cozyMode
+          ? '🧸 Включён режим «Я в домике» — сегодня максимум нежности и ноль лишней суеты'
+          : '☀️ Режим «Я в домике» выключен',
+        createdAt: Date.now()
+      });
+      pushStateToCloud();
+      renderAll();
+      showToast('🧸', sharedState.cozyMode ? 'Режим «Я в домике» включён' : 'Режим «Я в домике» выключен');
+    }
+
+    function renderMoodChips(todayKey) {
+      const container = document.getElementById('mood-chips');
+      const currentCheckin = (sharedState.checkins && sharedState.checkins[todayKey]) || { moods: [], symptoms: [] };
+      const earn = ensureTodayDailyEarn();
+
+      document.getElementById('checkin-reward-label').textContent = earn.checkinClaimed
+        ? 'Как ты сейчас, Ая? (бонус за сегодня получен ✓)'
+        : 'Как ты сейчас, Ая? (+10 💖 / день)';
+
+      container.innerHTML = MOOD_OPTIONS.map((m) => {
+        const active = (currentCheckin.moods || []).includes(m.id);
+        return `
+          <button type="button" onclick="toggleMood('${m.id}')"
+            class="ios-press px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${
+              active
+                ? 'bg-coralGlow text-white border-coralGlow shadow-coral-glow'
+                : 'bg-plumSoft/80 text-inkLight border-white/10'
+            }">
+            ${m.emoji} ${m.label}
+          </button>
+        `;
+      }).join('');
+    }
+
+    function toggleMood(moodId) {
+      const todayKey = toDateKey(getTodayDate());
+      if (!sharedState.checkins) sharedState.checkins = {};
+      if (!sharedState.checkins[todayKey]) sharedState.checkins[todayKey] = { moods: [], symptoms: [] };
+
+      const list = sharedState.checkins[todayKey].moods;
+      const idx = list.indexOf(moodId);
+      if (idx >= 0) list.splice(idx, 1);
+      else list.push(moodId);
+
+      const earn = ensureTodayDailyEarn();
+      if (!earn.checkinClaimed && list.length > 0) {
+        const res = awardDailyHearts(10, 'checkinClaimed');
+        if (res.awarded > 0) showToast('💖', `Чек-ин сохранён! +${res.awarded} 💖`);
+      }
+
+      const badge = document.getElementById('checkin-saved-badge');
+      badge.classList.remove('opacity-0');
+      setTimeout(() => badge.classList.add('opacity-0'), 1600);
+
+      pushStateToCloud();
+      renderAll();
+    }
+
+    // ==================== ВОПРОС ДНЯ ====================
+    function renderDailyQuestion() {
+      const dq = sharedState.dailyQuestion;
+      const earn = ensureTodayDailyEarn();
+      document.getElementById('daily-question-text').textContent = dq.question;
+      document.getElementById('dq-reward-badge').textContent = earn.dqClaimed ? 'Награда получена ✓' : '+15 💖 за ответ';
+
+      const grid = document.getElementById('dq-answers-grid');
+      let html = '';
+      if (dq.ayaAnswer) {
+        html += `<div class="bg-coralGlow/15 border border-coralGlow/25 rounded-2xl p-2.5 text-xs"><span class="font-bold text-peachSoft">Ая 🌸:</span> <span class="text-inkLight">${escapeHtml(dq.ayaAnswer)}</span></div>`;
+      }
+      if (dq.adminAnswer) {
+        html += `<div class="bg-lavenderGlow/15 border border-lavenderGlow/25 rounded-2xl p-2.5 text-xs"><span class="font-bold text-lavenderGlow">Парень 🔐:</span> <span class="text-inkLight">${escapeHtml(dq.adminAnswer)}</span></div>`;
+      }
+      grid.innerHTML = html;
+    }
+
+    function submitDailyQuestionAnswer() {
+      const input = document.getElementById('dq-answer-input');
+      const val = input.value.trim();
+      if (!val) return;
+
+      const isAdmin = loggedInRole === 'admin';
+      if (isAdmin) {
+        sharedState.dailyQuestion.adminAnswer = val;
+      } else {
+        sharedState.dailyQuestion.ayaAnswer = val;
+        const earn = ensureTodayDailyEarn();
+        if (!earn.dqClaimed) {
+          const res = awardDailyHearts(15, 'dqClaimed');
+          if (res.awarded > 0) showToast('💫', `Ответ записан! +${res.awarded} 💖`);
+        } else {
+          showToast('💫', 'Ответ обновлён!');
+        }
+      }
+
+      chatMessages.push({
+        id: 'dq_' + Date.now(),
+        sender: isAdmin ? 'admin' : 'aya',
+        type: 'system',
+        text: `💫 Ответ на Вопрос дня: «${val}»`,
+        createdAt: Date.now()
+      });
+
+      input.value = '';
+      pushStateToCloud();
+      renderAll();
+    }
+
+    // ==================== ИМПУЛЬС ТЕПЛА ====================
+    let warmthTimer = null;
+
+    function startWarmthHold() {
+      document.getElementById('warmth-wave-1').classList.remove('hidden');
+      warmthTimer = setTimeout(() => {
+        sendWarmthPulse();
+      }, 650);
+    }
+
+    function endWarmthHold() {
+      document.getElementById('warmth-wave-1').classList.add('hidden');
+      if (warmthTimer) {
+        clearTimeout(warmthTimer);
+        warmthTimer = null;
+      }
+    }
+
+    function sendWarmthPulse() {
+      endWarmthHold();
+      const sender = loggedInRole === 'admin' ? 'admin' : 'aya';
+      sharedState.lastWarmthAt = Date.now();
+      sharedState.lastWarmthBy = sender;
+
+      chatMessages.push({
+        id: 'w_' + Date.now(),
+        sender,
+        type: 'system',
+        text: sender === 'aya'
+          ? '💗 Ая отправила импульс тепла и крепкое объятие через километры!'
+          : '💗 Парень отправил импульс тепла и крепко обнял тебя через километры!',
+        createdAt: Date.now()
+      });
+
+      spawnFloatingHearts();
+      if (navigator.vibrate) navigator.vibrate([40, 30, 60]);
+      pushStateToCloud();
+      renderAll();
+      showToast('💗', 'Импульс тепла отправлен!');
+    }
+
+    function spawnFloatingHearts() {
+      const emojis = ['💗', '💖', '🫂', '✨', '❤️'];
+      for (let i = 0; i < 8; i++) {
+        const el = document.createElement('div');
+        el.className = 'floating-hug-heart text-2xl';
+        el.textContent = emojis[i % emojis.length];
+        el.style.left = `${45 + (Math.random() * 40 - 20)}%`;
+        el.style.bottom = '110px';
+        el.style.setProperty('--dx', `${Math.round(Math.random() * 140 - 70)}px`);
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 1500);
+      }
+    }
+
+    // ==================== БАНКА ТЕПЛА (МАКСИМУМ 3 НАГРАДЫ В ДЕНЬ) ====================
+    function renderWarmthJarUI() {
+      const notes = sharedState.jarNotes || DEFAULT_JAR_NOTES;
+      const earn = ensureTodayDailyEarn();
+      document.getElementById('jar-count-badge').textContent = `${notes.length} записок`;
+      const left = Math.max(0, 3 - earn.jarOpens);
+      document.getElementById('jar-daily-status').textContent = left > 0
+        ? `Бонус сегодня: ${earn.jarOpens}/3 (+10 💖 за записку)`
+        : 'Лимит наград на сегодня (3/3) собран — читай без ограничений 💌';
+    }
+
+    function shakeWarmthJar() {
+      const btn = document.getElementById('warmth-jar-btn');
+      btn.classList.remove('jar-shaking');
+      void btn.offsetWidth;
+      btn.classList.add('jar-shaking');
+
+      const notes = sharedState.jarNotes && sharedState.jarNotes.length > 0 ? sharedState.jarNotes : DEFAULT_JAR_NOTES;
+      const randomNote = notes[Math.floor(Math.random() * notes.length)];
+      const earn = ensureTodayDailyEarn();
+
+      let rewardLabel = 'Тёплая записка 💌';
+      if (earn.jarOpens < 3 && earn.totalEarned < DAILY_HEARTS_CAP) {
+        earn.jarOpens += 1;
+        const res = awardDailyHearts(10, null);
+        if (res.awarded > 0) {
+          rewardLabel = `+${res.awarded} 💖 (${earn.jarOpens}/3 сегодня)`;
+          showToast('🫙', `Записка из банки! +${res.awarded} 💖`);
+        }
+      } else {
+        showToast('💌', 'Новая тёплая записка для тебя');
+      }
+
+      document.getElementById('jar-pulled-card').classList.remove('hidden');
+      document.getElementById('jar-pulled-reward-tag').textContent = rewardLabel;
+      document.getElementById('jar-pulled-text').textContent = randomNote;
+
+      pushStateToCloud();
+      renderAll();
+    }
+
+    // ==================== МИНИ-ИГРА «ЛОВЕЦ ТЕПЛА» (15 СЕК, ДО +15 💖/ДЕНЬ) ====================
+    let catcherAnimId = null;
+    let catcherRunning = false;
+    let catcherBasketX = 0.5;
+
+    function resizeCatcherCanvas() {
+      const canvas = document.getElementById('warmth-catcher-canvas');
+      if (!canvas || !canvas.parentElement) return;
+      canvas.width = canvas.parentElement.clientWidth || 340;
+      canvas.height = canvas.parentElement.clientHeight || 224;
+    }
+
+    function startWarmthCatcherGame() {
+      resizeCatcherCanvas();
+      const canvas = document.getElementById('warmth-catcher-canvas');
+      const ctx = canvas.getContext('2d');
+
+      document.getElementById('catcher-overlay').classList.add('hidden');
+      document.getElementById('catcher-hud').classList.remove('hidden');
+
+      let score = 0;
+      let timeLeft = 15;
+      catcherRunning = true;
+      catcherBasketX = canvas.width / 2;
+      const items = [];
+
+      document.getElementById('catcher-live-score').textContent = '0';
+      document.getElementById('catcher-live-time').textContent = '15';
+
+      const moveHandler = (clientX) => {
+        const rect = canvas.getBoundingClientRect();
+        catcherBasketX = Math.max(26, Math.min(canvas.width - 26, clientX - rect.left));
+      };
+
+      canvas.onmousemove = (e) => moveHandler(e.clientX);
+      canvas.ontouchmove = (e) => {
+        if (e.touches && e.touches[0]) {
+          e.preventDefault();
+          moveHandler(e.touches[0].clientX);
+        }
+      };
+
+      const spawnInterval = setInterval(() => {
+        if (!catcherRunning) return;
+        const r = Math.random();
+        const type = r < 0.62 ? 'heart' : r < 0.85 ? 'star' : 'storm';
+        items.push({
+          x: 24 + Math.random() * (canvas.width - 48),
+          y: -20,
+          speed: 2.6 + Math.random() * 2.2,
+          type
+        });
+      }, 420);
+
+      const timerInterval = setInterval(() => {
+        timeLeft -= 1;
+        document.getElementById('catcher-live-time').textContent = String(Math.max(0, timeLeft));
+        if (timeLeft <= 0) {
+          finishCatcherGame();
+        }
+      }, 1000);
+
+      function finishCatcherGame() {
+        catcherRunning = false;
+        clearInterval(spawnInterval);
+        clearInterval(timerInterval);
+        if (catcherAnimId) cancelAnimationFrame(catcherAnimId);
+
+        document.getElementById('catcher-hud').classList.add('hidden');
+        document.getElementById('catcher-overlay').classList.remove('hidden');
+
+        if (score > (sharedState.bestCatcherScore || 0)) {
+          sharedState.bestCatcherScore = score;
+        }
+
+        const earn = ensureTodayDailyEarn();
+        let msg = `Ты набрала ${score} очков!`;
+        if (!earn.gameClaimed && score > 0) {
+          const potential = Math.min(15, Math.max(5, Math.round(score / 2)));
+          const res = awardDailyHearts(potential, 'gameClaimed');
+          if (res.awarded > 0) {
+            msg = `Счёт: ${score} • Награда дня: +${res.awarded} 💖!`;
+            showToast('🧺', `+${res.awarded} 💖 за игру!`);
+          }
+        } else if (earn.gameClaimed) {
+          msg = `Счёт: ${score} • Дневной бонус за игру уже собран ✓`;
+        }
+
+        document.getElementById('catcher-overlay-title').textContent = 'Раунд завершён ✨';
+        document.getElementById('catcher-overlay-sub').textContent = msg;
+
+        pushStateToCloud();
+        renderAll();
+      }
+
+      function loop() {
+        if (!catcherRunning) return;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Корзинка
+        ctx.font = '32px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('🧺', catcherBasketX, canvas.height - 26);
+
+        for (let i = items.length - 1; i >= 0; i--) {
+          const it = items[i];
+          it.y += it.speed;
+          const icon = it.type === 'heart' ? '💖' : it.type === 'star' ? '⭐' : '⛈️';
+          ctx.font = '24px sans-serif';
+          ctx.fillText(icon, it.x, it.y);
+
+          if (Math.abs(it.x - catcherBasketX) < 34 && Math.abs(it.y - (canvas.height - 26)) < 26) {
+            if (it.type === 'heart') score += 1;
+            else if (it.type === 'star') score += 3;
+            else score = Math.max(0, score - 3);
+            document.getElementById('catcher-live-score').textContent = String(score);
+            items.splice(i, 1);
+          } else if (it.y > canvas.height + 24) {
+            items.splice(i, 1);
+          }
+        }
+
+        catcherAnimId = requestAnimationFrame(loop);
+      }
+
+      loop();
+    }
+
+    // ==================== ПРАВДА ИЛИ ДЕЙСТВИЕ ====================
+    function rollTruthOrDare(mode) {
+      const pool = mode === 'truth' ? TRUTH_PROMPTS : DARE_PROMPTS;
+      const text = pool[Math.floor(Math.random() * pool.length)];
+      currentTodPrompt = { mode, text };
+
+      document.getElementById('tod-type-tag').textContent = mode === 'truth' ? '🤫 ПРАВДА' : '⚡ ДЕЙСТВИЕ';
+      document.getElementById('tod-prompt-text').textContent = text;
+      document.getElementById('tod-send-chat-btn').classList.remove('hidden');
+    }
+
+    function sendTodToChat() {
+      if (!currentTodPrompt) return;
+      const sender = loggedInRole === 'admin' ? 'admin' : 'aya';
+      const prefix = currentTodPrompt.mode === 'truth' ? '🤫 Правда:' : '⚡ Действие:';
+      chatMessages.push({
+        id: 'tod_' + Date.now(),
+        sender,
+        type: 'text',
+        text: `${prefix} ${currentTodPrompt.text}`,
+        createdAt: Date.now()
+      });
+      pushStateToCloud();
+      renderChat();
+      switchTab('chat');
+      showToast('💬', 'Задание отправлено в чат!');
+    }
+
+    // ==================== ХОЧУШКИ И СПИСОК ПРИ ВСТРЕЧЕ ====================
+    function renderWishlist() {
+      const container = document.getElementById('wishlist-container');
+      const wishes = sharedState.wishes || [];
+      if (wishes.length === 0) {
+        container.innerHTML = `<p class="text-xs text-mutedLight text-center py-2">Список хочушек пока пуст — добавь первую выше ✨</p>`;
+        return;
+      }
+
+      container.innerHTML = wishes.map((w) => {
+        const badge =
+          w.status === 'done'
+            ? '<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300">Исполнено ✅</span>'
+            : w.status === 'in_progress'
+            ? '<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-400/20 text-amber-200">Парень исполняет ✨</span>'
+            : '<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-coralGlow/20 text-peachSoft">Отправлено 💌</span>';
+
+        return `
+          <div class="bg-plumSoft/80 rounded-2xl p-3 border border-white/5 flex items-center justify-between gap-2">
+            <div class="min-w-0">
+              <div class="flex items-center gap-1.5 flex-wrap">
+                <span class="text-[10px] text-mutedLight">${escapeHtml(w.category)}</span>
+                ${badge}
+              </div>
+              <p class="text-xs font-semibold text-inkLight mt-1">${escapeHtml(w.title)}</p>
+            </div>
+            <button type="button" onclick="deleteWish('${w.id}')" class="text-xs text-mutedLight hover:text-coralGlow px-2">✕</button>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function addNewWish(e) {
+      e.preventDefault();
+      const input = document.getElementById('wish-title-input');
+      const cat = document.getElementById('wish-category-select').value;
+      const title = input.value.trim();
+      if (!title) return;
+
+      sharedState.wishes.unshift({
+        id: 'w_' + Date.now(),
+        title,
+        category: cat,
+        status: 'new',
+        createdAt: Date.now()
+      });
+
+      chatMessages.push({
+        id: 'wc_' + Date.now(),
+        sender: loggedInRole === 'admin' ? 'admin' : 'aya',
+        type: 'system',
+        text: `🍓 Новая хочушка (${cat}): «${title}»`,
+        createdAt: Date.now()
+      });
+
+      input.value = '';
+      pushStateToCloud();
+      renderAll();
+      showToast('🍓', 'Хочушка отправлена парню!');
+    }
+
+    function deleteWish(id) {
+      sharedState.wishes = (sharedState.wishes || []).filter((w) => w.id !== id);
+      pushStateToCloud();
+      renderAll();
+    }
+
+    function renderMeetupList() {
+      const list = sharedState.meetupList || [];
+      const doneCount = list.filter((i) => i.done).length;
+      document.getElementById('meetup-counter-badge').textContent = `${doneCount}/${list.length}`;
+
+      document.getElementById('meetup-list-container').innerHTML = list.map((item) => `
+        <button type="button" onclick="toggleMeetupItem('${item.id}')"
+          class="ios-press w-full text-left bg-plumSoft/75 rounded-2xl p-3 border border-white/5 flex items-center gap-2.5">
+          <span class="w-5 h-5 rounded-full flex items-center justify-center text-xs ${
+            item.done ? 'bg-goldWarm text-plumBg font-bold' : 'border border-white/25'
+          }">${item.done ? '✓' : ''}</span>
+          <span class="text-xs ${item.done ? 'line-through text-mutedLight' : 'text-inkLight font-medium'}">${escapeHtml(item.text)}</span>
+        </button>
+      `).join('');
+    }
+
+    function addMeetupItem(e) {
+      e.preventDefault();
+      const input = document.getElementById('meetup-input');
+      const text = input.value.trim();
+      if (!text) return;
+      sharedState.meetupList.push({ id: 'm_' + Date.now(), text, done: false });
+      input.value = '';
+      pushStateToCloud();
+      renderAll();
+    }
+
+    function toggleMeetupItem(id) {
+      const item = (sharedState.meetupList || []).find((i) => i.id === id);
+      if (item) {
+        item.done = !item.done;
+        pushStateToCloud();
+        renderAll();
+      }
+    }
+
+    // ==================== МАГАЗИН СКИЛОВ ЗАБОТЫ ====================
+    function renderCareSkills() {
+      const skills = sharedState.skills || DEFAULT_SKILLS;
+      document.getElementById('care-skills-list').innerHTML = skills.map((s) => {
+        const canAfford = (sharedState.hearts || 0) >= s.cost;
+        return `
+          <div class="ios-glass rounded-[28px] p-4 shadow-ios-deep flex items-start justify-between gap-3">
+            <div class="flex items-start gap-3">
+              <div class="w-11 h-11 rounded-2xl bg-plumSoft flex items-center justify-center text-xl shrink-0 border border-white/10">
+                ${escapeHtml(s.emoji)}
+              </div>
+              <div>
+                <h4 class="font-serif text-sm font-bold text-inkLight">${escapeHtml(s.title)}</h4>
+                <p class="text-[11px] text-mutedLight leading-relaxed mt-0.5">${escapeHtml(s.desc)}</p>
+              </div>
+            </div>
+
+            <button type="button" onclick="activateCareSkill('${s.id}')"
+              class="ios-press shrink-0 px-3 py-2 rounded-2xl text-xs font-extrabold ${
+                canAfford
+                  ? 'bg-gradient-to-r from-coralGlow to-berryDeep text-white shadow-coral-glow'
+                  : 'bg-plumSoft text-mutedLight border border-white/10'
+              }">
+              ${s.cost} 💖
+            </button>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function activateCareSkill(skillId) {
+      const skill = (sharedState.skills || DEFAULT_SKILLS).find((s) => s.id === skillId);
+      if (!skill) return;
+
+      if ((sharedState.hearts || 0) < skill.cost) {
+        showToast('💖', `Не хватает ${skill.cost - sharedState.hearts} 💖 — загляни в Банку тепла или мини-игру!`);
+        return;
+      }
+
+      sharedState.hearts -= skill.cost;
+      if (!sharedState.activatedSkills) sharedState.activatedSkills = [];
+      sharedState.activatedSkills.unshift({
+        id: 'act_' + Date.now(),
+        skillId: skill.id,
+        emoji: skill.emoji,
+        title: skill.title,
+        cost: skill.cost,
+        status: 'pending',
+        activatedAt: Date.now()
+      });
+
+      chatMessages.push({
+        id: 'sk_' + Date.now(),
+        sender: 'aya',
+        type: 'skill',
+        text: `${skill.emoji} Ая активировала скил: «${skill.title}» (−${skill.cost} 💖)`,
+        createdAt: Date.now()
+      });
+
+      fireConfetti();
+      pushStateToCloud();
+      renderAll();
+      showToast(skill.emoji, `Скил «${skill.title}» активирован!`);
+    }
+
+    // ==================== КАЛЕНДАРЬ ЦИКЛА И СИМПТОМЫ ====================
+    function changeMonth(delta) {
+      currentCalendarMonth = new Date(currentCalendarMonth.getFullYear(), currentCalendarMonth.getMonth() + delta, 1);
+      renderCalendar();
+    }
+
+    function renderCalendar() {
+      const year = currentCalendarMonth.getFullYear();
+      const month = currentCalendarMonth.getMonth();
+      const title = currentCalendarMonth.toLocaleDateString('ru-RU', { month: 'long', year: 'numeric' });
+      document.getElementById('calendar-month-title').textContent = title;
+
+      const todayKey = toDateKey(getTodayDate());
+      const info = getCycleInfo();
+      const periodSet = new Set(sharedState.periodDays || []);
+
+      // Прогноз следующего цикла и овуляции
+      const predictedPeriodSet = new Set();
+      const ovulationSet = new Set();
+      for (let cycleOffset = 0; cycleOffset <= 2; cycleOffset++) {
+        const start = new Date(info.lastStart);
+        start.setDate(start.getDate() + cycleOffset * info.cycleLen);
+        if (cycleOffset > 0) {
+          for (let p = 0; p < info.periodLen; p++) {
+            const d = new Date(start);
+            d.setDate(start.getDate() + p);
+            predictedPeriodSet.add(toDateKey(d));
+          }
+        }
+        const ovDay = new Date(start);
+        ovDay.setDate(start.getDate() + Math.max(10, info.cycleLen - 14));
+        ovulationSet.add(toDateKey(ovDay));
+      }
+
+      const firstDayOfMonth = new Date(year, month, 1);
+      let startWeekday = firstDayOfMonth.getDay() - 1;
+      if (startWeekday < 0) startWeekday = 6;
+
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      let html = '';
+
+      for (let i = 0; i < startWeekday; i++) {
+        html += '<div></div>';
+      }
+
+      for (let d = 1; d <= daysInMonth; d++) {
+        const dateObj = new Date(year, month, d);
+        const key = toDateKey(dateObj);
+        const isToday = key === todayKey;
+        const isActualPeriod = periodSet.has(key);
+        const isPredicted = predictedPeriodSet.has(key);
+        const isOvulation = ovulationSet.has(key);
+
+        let cls = 'bg-plumSoft/60 text-inkLight';
+        if (isActualPeriod) cls = 'bg-coralGlow text-white font-extrabold shadow-coral-glow';
+        else if (isPredicted) cls = 'border border-dashed border-coralGlow text-peachSoft';
+        else if (isOvulation) cls = 'bg-lavenderGlow/25 text-lavenderGlow border border-lavenderGlow/40 font-bold';
+
+        if (isToday) cls += ' ring-2 ring-white';
+
+        html += `
+          <button type="button" onclick="toggleCalendarDate('${key}')"
+            class="ios-press h-9 rounded-xl text-xs flex items-center justify-center ${cls}">
+            ${d}
+          </button>
+        `;
+      }
+
+      document.getElementById('calendar-grid').innerHTML = html;
+      const isPeriodToday = periodSet.has(todayKey);
+      document.getElementById('btn-toggle-period-text').textContent = isPeriodToday
+        ? 'Убрать отметку месячных за сегодня'
+        : 'Отметить начало месячных сегодня';
+    }
+
+    function toggleCalendarDate(dateKey) {
+      const set = new Set(sharedState.periodDays || []);
+      if (set.has(dateKey)) {
+        set.delete(dateKey);
+      } else {
+        set.add(dateKey);
+      }
+      sharedState.periodDays = Array.from(set).sort();
+      pushStateToCloud();
+      renderAll();
+      showToast('🩸', 'Календарь цикла обновлён');
+    }
+
+    function toggleTodayPeriod() {
+      toggleCalendarDate(toDateKey(getTodayDate()));
+    }
+
+    function adjustSetting(key, delta) {
+      if (key === 'cycleLength') {
+        sharedState.cycleLength = Math.max(21, Math.min(40, (sharedState.cycleLength || 28) + delta));
+      } else if (key === 'periodLength') {
+        sharedState.periodLength = Math.max(2, Math.min(10, (sharedState.periodLength || 5) + delta));
+      }
+      pushStateToCloud();
+      renderAll();
+    }
+
+    function renderSymptomChips(todayKey) {
+      const currentCheckin = (sharedState.checkins && sharedState.checkins[todayKey]) || { moods: [], symptoms: [] };
+      document.getElementById('symptom-chips').innerHTML = SYMPTOM_OPTIONS.map((s) => {
+        const active = (currentCheckin.symptoms || []).includes(s.id);
+        return `
+          <button type="button" onclick="toggleSymptom('${s.id}')"
+            class="ios-press px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${
+              active
+                ? 'bg-lavenderGlow text-plumBg border-lavenderGlow font-bold'
+                : 'bg-plumSoft/80 text-inkLight border-white/10'
+            }">
+            ${s.emoji} ${s.label}
+          </button>
+        `;
+      }).join('');
+    }
+
+    function toggleSymptom(symId) {
+      const todayKey = toDateKey(getTodayDate());
+      if (!sharedState.checkins) sharedState.checkins = {};
+      if (!sharedState.checkins[todayKey]) sharedState.checkins[todayKey] = { moods: [], symptoms: [] };
+      const list = sharedState.checkins[todayKey].symptoms;
+      const idx = list.indexOf(symId);
+      if (idx >= 0) list.splice(idx, 1);
+      else list.push(symId);
+
+      pushStateToCloud();
+      renderAll();
+      showToast('🩺', 'Симптомы обновлены');
+    }
+
+    // ==================== ЖИВОЙ ЧАТ ====================
+    function renderChat() {
+      const list = document.getElementById('chat-messages-list');
+      if (!list) return;
+
+      list.innerHTML = (chatMessages || []).map((m) => {
+        if (m.type === 'system' || m.type === 'skill') {
+          return `
+            <div class="mx-auto max-w-[90%] text-center px-3.5 py-2 rounded-2xl ${
+              m.type === 'skill'
+                ? 'bg-gradient-to-r from-coralGlow/25 to-lavenderGlow/25 border border-peachSoft/30 text-inkLight font-semibold'
+                : 'bg-plumSoft/70 border border-white/5 text-mutedLight'
+            } text-[11px]">
+              ${escapeHtml(m.text)}
+              <span class="block text-[9px] opacity-60 mt-0.5">${formatTime(m.createdAt)}</span>
+            </div>
+          `;
+        }
+
+        const isMe = (loggedInRole === 'admin' && m.sender === 'admin') || (loggedInRole !== 'admin' && m.sender === 'aya');
+        const senderName = m.sender === 'admin' ? 'Парень 🔐' : 'Ая 🌸';
+
+        return `
+          <div class="flex flex-col ${isMe ? 'items-end' : 'items-start'}">
+            <span class="text-[9px] text-mutedLight px-2 mb-0.5">${senderName} • ${formatTime(m.createdAt)}</span>
+            <div class="max-w-[82%] px-3.5 py-2.5 rounded-2xl text-xs leading-relaxed ${
+              isMe
+                ? 'bg-gradient-to-br from-coralGlow to-berryDeep text-white rounded-br-sm'
+                : 'bg-plumSoft text-inkLight border border-white/10 rounded-bl-sm'
+            }">
+              ${escapeHtml(m.text)}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      list.scrollTop = list.scrollHeight;
+    }
+
+    function sendQuickSticker(text) {
+      const sender = loggedInRole === 'admin' ? 'admin' : 'aya';
+      chatMessages.push({
+        id: 'st_' + Date.now(),
+        sender,
+        type: 'text',
+        text,
+        createdAt: Date.now()
+      });
+      pushStateToCloud();
+      renderChat();
+      if (loggedInRole === 'admin') renderAdminPanel();
+    }
+
+    function handleChatSubmit(e) {
+      e.preventDefault();
+      const input = document.getElementById('chat-input');
+      const text = input.value.trim();
+      if (!text) return;
+
+      const sender = loggedInRole === 'admin' ? 'admin' : 'aya';
+      chatMessages.push({
+        id: 'msg_' + Date.now(),
+        sender,
+        type: 'text',
+        text,
+        createdAt: Date.now()
+      });
+
+      input.value = '';
+      pushStateToCloud();
+      renderChat();
+    }
+
+    // ==================== ПУЛЬТ ПАРНЯ (ADMIN PANEL) ====================
+    function renderAdminPanel() {
+      const info = getCycleInfo();
+      const todayKey = toDateKey(getTodayDate());
+      const todayCheckin = (sharedState.checkins && sharedState.checkins[todayKey]) || { moods: [], symptoms: [] };
+
+      document.getElementById('admin-radar-cycle').textContent = `День ${info.dayOfCycle} из ${info.cycleLen} (${info.phase.headline})`;
+      document.getElementById('admin-radar-hearts').textContent = `${sharedState.hearts} 💖`;
+
+      const cozyBadge = document.getElementById('admin-cozy-badge');
+      if (sharedState.cozyMode) {
+        cozyBadge.textContent = '🧸 Ая в домике!';
+        cozyBadge.className = 'text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-coralGlow text-white';
+      } else {
+        cozyBadge.textContent = 'Обычный режим';
+        cozyBadge.className = 'text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-plumSoft text-mutedLight';
+      }
+
+      const moodNames = (todayCheckin.moods || []).map((id) => {
+        const m = MOOD_OPTIONS.find((x) => x.id === id);
+        return m ? `${m.emoji} ${m.label}` : id;
+      });
+      const symNames = (todayCheckin.symptoms || []).map((id) => {
+        const s = SYMPTOM_OPTIONS.find((x) => x.id === id);
+        return s ? `${s.emoji} ${s.label}` : id;
+      });
+      const combined = [...moodNames, ...symNames];
+      document.getElementById('admin-radar-moods').textContent = combined.length > 0 ? combined.join(' • ') : 'Пока не отмечено сегодня';
+
+      // Поле послания дня
+      const noteInput = document.getElementById('admin-love-note-input');
+      if (document.activeElement !== noteInput) {
+        noteInput.value = sharedState.loveNote || '';
+      }
+
+      // Очередь активированных скилов Аи
+      const activeList = (sharedState.activatedSkills || []).filter((s) => s.status !== 'done');
+      document.getElementById('admin-active-skills-count').textContent = String(activeList.length);
+      const activeContainer = document.getElementById('admin-active-skills-list');
+
+      if (activeList.length === 0) {
+        activeContainer.innerHTML = `<p class="text-xs text-mutedLight">Пока нет невыполненных скилов от Аи ✨</p>`;
+      } else {
+        activeContainer.innerHTML = activeList.map((item) => `
+          <div class="bg-amber-400/10 border border-amber-400/30 rounded-2xl p-3 flex items-center justify-between gap-2">
+            <div>
+              <p class="text-xs font-bold text-inkLight">${escapeHtml(item.emoji)} ${escapeHtml(item.title)}</p>
+              <p class="text-[10px] text-amber-200 mt-0.5">Активировано в ${formatTime(item.activatedAt)}</p>
+            </div>
+            <button type="button" onclick="adminCompleteActivatedSkill('${item.id}')"
+              class="ios-press px-3 py-1.5 rounded-xl bg-emerald-500 text-plumBg text-[11px] font-extrabold shrink-0">
+              Выполнено ✅
+            </button>
+          </div>
+        `).join('');
+      }
+
+      // Отдельное окно входящих сообщений и сигналов от Аи
+      const ayaMsgs = (chatMessages || []).filter((m) => m.sender === 'aya').slice().reverse();
+      document.getElementById('admin-inbox-count').textContent = String(ayaMsgs.length);
+      const inboxContainer = document.getElementById('admin-aya-inbox-list');
+
+      if (ayaMsgs.length === 0) {
+        inboxContainer.innerHTML = `<p class="text-xs text-mutedLight">От Аи пока не приходило новых сигналов 💌</p>`;
+      } else {
+        inboxContainer.innerHTML = ayaMsgs.map((m) => `
+          <div class="bg-plumSoft/85 rounded-2xl p-3 border border-white/5">
+            <div class="flex items-center justify-between text-[10px] text-peachSoft font-bold">
+              <span>Ая 🌸</span>
+              <span>${formatTime(m.createdAt)}</span>
+            </div>
+            <p class="text-xs text-inkLight mt-1 leading-relaxed">${escapeHtml(m.text)}</p>
+          </div>
+        `).join('');
+      }
+
+      // Управление хочушками Аи
+      const wishes = sharedState.wishes || [];
+      const adminWishesEl = document.getElementById('admin-wishlist-container');
+      if (wishes.length === 0) {
+        adminWishesEl.innerHTML = `<p class="text-xs text-mutedLight">Список хочушек пуст</p>`;
+      } else {
+        adminWishesEl.innerHTML = wishes.map((w) => `
+          <div class="bg-plumSoft/80 rounded-2xl p-3 border border-white/5 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-[10px] text-mutedLight">${escapeHtml(w.category)}</span>
+              <span class="text-[10px] font-bold text-peachSoft">${w.status === 'done' ? 'Исполнено ✅' : w.status === 'in_progress' ? 'В работе ✨' : 'Новое'}</span>
+            </div>
+            <p class="text-xs font-semibold text-inkLight">${escapeHtml(w.title)}</p>
+            <div class="flex gap-2">
+              <button type="button" onclick="adminSetWishStatus('${w.id}', 'in_progress')" class="ios-press flex-1 py-1.5 rounded-xl bg-amber-400/20 text-amber-200 text-[11px] font-bold">
+                Беру в работу ✨
+              </button>
+              <button type="button" onclick="adminSetWishStatus('${w.id}', 'done')" class="ios-press flex-1 py-1.5 rounded-xl bg-emerald-500/20 text-emerald-300 text-[11px] font-bold">
+                Исполнено ✅
+              </button>
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+
+    function adminCompleteActivatedSkill(actId) {
+      const item = (sharedState.activatedSkills || []).find((s) => s.id === actId);
+      if (!item) return;
+      item.status = 'done';
+
+      chatMessages.push({
+        id: 'done_' + Date.now(),
+        sender: 'admin',
+        type: 'system',
+        text: `✅ Парень выполнил твой скил: «${item.title}»!`,
+        createdAt: Date.now()
+      });
+
+      pushStateToCloud();
+      renderAll();
+      showToast('✅', 'Скил отмечен выполненным!');
+    }
+
+    function adminQuickReplyFromInbox(e) {
+      e.preventDefault();
+      const input = document.getElementById('admin-inbox-reply-input');
+      const text = input.value.trim();
+      if (!text) return;
+
+      chatMessages.push({
+        id: 'rep_' + Date.now(),
+        sender: 'admin',
+        type: 'text',
+        text,
+        createdAt: Date.now()
+      });
+
+      input.value = '';
+      pushStateToCloud();
+      renderAll();
+      showToast('💌', 'Ответ отправлен Ае!');
+    }
+
+    function adminSaveLoveNote() {
+      const val = document.getElementById('admin-love-note-input').value.trim();
+      if (!val) return;
+      sharedState.loveNote = val;
+      pushStateToCloud();
+      renderAll();
+      showToast('💌', 'Послание дня обновлено у Аи!');
+    }
+
+    function adminSetWishStatus(wishId, status) {
+      const w = (sharedState.wishes || []).find((x) => x.id === wishId);
+      if (!w) return;
+      w.status = status;
+
+      chatMessages.push({
+        id: 'ws_' + Date.now(),
+        sender: 'admin',
+        type: 'system',
+        text: status === 'done'
+          ? `✅ Парень исполнил твою хочушку: «${w.title}»!`
+          : `✨ Парень взял в работу твою хочушку: «${w.title}»`,
+        createdAt: Date.now()
+      });
+
+      pushStateToCloud();
+      renderAll();
+      showToast('✨', 'Статус хочушки обновлён');
+    }
+
+    function adminSendHeartBonus(amount) {
+      const reasonInput = document.getElementById('admin-bonus-note');
+      const reason = reasonInput.value.trim();
+      sharedState.hearts = (sharedState.hearts || 0) + amount;
+
+      chatMessages.push({
+        id: 'bn_' + Date.now(),
+        sender: 'admin',
+        type: 'system',
+        text: reason
+          ? `💖 Парень подарил тебе +${amount} 💖 (${reason})`
+          : `💖 Парень подарил тебе +${amount} 💖 просто так!`,
+        createdAt: Date.now()
+      });
+
+      reasonInput.value = '';
+      pushStateToCloud();
+      renderAll();
+      showToast('💖', `Подарено +${amount} 💖!`);
+    }
+
+    function adminAddJarNote() {
+      const input = document.getElementById('admin-jar-note-input');
+      const text = input.value.trim();
+      if (!text) return;
+      if (!sharedState.jarNotes) sharedState.jarNotes = [...DEFAULT_JAR_NOTES];
+      sharedState.jarNotes.unshift(text);
+      input.value = '';
+      pushStateToCloud();
+      renderAll();
+      showToast('🫙', 'Записка добавлена в Банку тепла!');
+    }
+
+    function adminCreateSkill() {
+      const emoji = document.getElementById('admin-skill-emoji').value.trim() || '🎁';
+      const title = document.getElementById('admin-skill-title').value.trim();
+      const desc = document.getElementById('admin-skill-desc').value.trim() || 'Персональный купон заботы от парня';
+      const cost = Math.max(5, parseInt(document.getElementById('admin-skill-cost').value, 10) || 40);
+
+      if (!title) {
+        showToast('⚠️', 'Введи название скила');
+        return;
+      }
+
+      if (!sharedState.skills) sharedState.skills = JSON.parse(JSON.stringify(DEFAULT_SKILLS));
+      sharedState.skills.unshift({
+        id: 'custom_' + Date.now(),
+        emoji,
+        title,
+        desc,
+        cost
+      });
+
+      document.getElementById('admin-skill-title').value = '';
+      document.getElementById('admin-skill-desc').value = '';
+      pushStateToCloud();
+      renderAll();
+      showToast('⚡', 'Новый скил добавлен!');
+    }
+
+    function adminUpdatePin() {
+      const input = document.getElementById('admin-new-pin-input');
+      const val = input.value.trim();
+      if (!/^\d{4}$/.test(val)) {
+        showToast('⚠️', 'Введи ровно 4 цифры');
+        return;
+      }
+      sharedState.adminPin = val;
+      input.value = '';
+      pushStateToCloud();
+      showToast('🔐', `Новый PIN сохранён: ${val}`);
+    }
+
+    // ==================== ТОСТЫ И КОНФЕТТИ ====================
+    let toastTimeout = null;
+    function showToast(icon, message) {
+      const toast = document.getElementById('ios-toast');
+      document.getElementById('toast-icon').textContent = icon;
+      document.getElementById('toast-message').textContent = message;
+
+      toast.classList.remove('opacity-0', '-translate-y-3');
+      toast.classList.add('opacity-100', 'translate-y-0');
+
+      if (toastTimeout) clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        toast.classList.add('opacity-0', '-translate-y-3');
+        toast.classList.remove('opacity-100', 'translate-y-0');
+      }, 2400);
+    }
+
+    function fireConfetti() {
+      const canvas = document.getElementById('confetti-canvas');
+      if (!canvas) return;
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const ctx = canvas.getContext('2d');
+      const colors = ['#FF758F', '#FFB3C1', '#B892FF', '#FFD166', '#FFFFFF'];
+      const particles = Array.from({ length: 55 }, () => ({
+        x: canvas.width / 2,
+        y: canvas.height / 2,
+        vx: (Math.random() - 0.5) * 12,
+        vy: (Math.random() - 0.8) * 12,
+        size: 5 + Math.random() * 5,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        life: 60
+      }));
+
+      function step() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        let alive = false;
+        particles.forEach((p) => {
+          if (p.life > 0) {
+            alive = true;
+            p.x += p.vx;
+            p.y += p.vy;
+            p.vy += 0.35;
+            p.life -= 1;
+            ctx.fillStyle = p.color;
+            ctx.fillRect(p.x, p.y, p.size, p.size);
+          }
+        });
+        if (alive) requestAnimationFrame(step);
+        else ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+      step();
+    }
+
+    // Запуск приложения при полной загрузке окна
+    window.onload = function () {
+      initCloud();
+    };
+  </script>
+</body>
+</html>
